@@ -17,7 +17,6 @@ import pytest
 
 import analytics_platform.contracts as contracts_pkg
 
-
 # ---------------------------------------------------------------------------
 # Public-name stability
 # ---------------------------------------------------------------------------
@@ -85,8 +84,7 @@ class TestPublicSurface:
     def test_all_documented_names_exported(self) -> None:
         for name in EXPECTED_PUBLIC_NAMES:
             assert hasattr(contracts_pkg, name), (
-                f"analytics_platform.contracts is missing documented public "
-                f"name: {name!r}"
+                f"analytics_platform.contracts is missing documented public name: {name!r}"
             )
 
     def test_dunder_all_lists_all_documented_names(self) -> None:

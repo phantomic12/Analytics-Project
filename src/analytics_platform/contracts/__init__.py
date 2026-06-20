@@ -17,7 +17,7 @@ Build order and family ownership follow ``docs/contracts/contracts-index-v1.1.md
 - ``common`` (Task 11) — base IDs, status, issues, warnings, metrics,
   artifacts, and ``StageResult``. Imported from
   ``analytics_platform.contracts.common``.
-- ``execution`` (Tasks 12–14) — backend-neutral execution references,
+- ``execution`` (Tasks 12-14) - backend-neutral execution references,
   materialization, and limit policies. Imported from
   ``analytics_platform.contracts.execution``.
 - ``artifacts`` (Task 15) — durable artifact references and storage
@@ -26,7 +26,7 @@ Build order and family ownership follow ``docs/contracts/contracts-index-v1.1.md
   reasons. Imported from ``analytics_platform.contracts.cache``.
 - ``visuals`` (Task 17) — table/chart artifact references. Imported from
   ``analytics_platform.contracts.visuals``.
-- ``datasets`` (Tasks 18–20) — dataset identity, load, ingestion, and
+- ``datasets`` (Tasks 18-20) - dataset identity, load, ingestion, and
   fingerprint contracts. Imported from
   ``analytics_platform.contracts.datasets``.
 

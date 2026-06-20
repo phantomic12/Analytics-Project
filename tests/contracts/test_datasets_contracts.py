@@ -19,7 +19,7 @@ they exercise the dependency-light contract surface only.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -146,7 +146,7 @@ class TestDatasetHandle:
             content_hash="abc123",
             row_count=100,
         )
-        ts = datetime(2026, 6, 20, 18, 0, 0, tzinfo=timezone.utc)
+        ts = datetime(2026, 6, 20, 18, 0, 0, tzinfo=UTC)
         h = DatasetHandle(
             dataset_id="d1",
             dataset_ref="ds-v1",
@@ -179,10 +179,10 @@ class TestDatasetHandle:
             registered_at=naive,
         )
         assert h.registered_at is not None
-        assert h.registered_at.tzinfo is timezone.utc
+        assert h.registered_at.tzinfo is UTC
 
     def test_aware_datetime_preserved(self) -> None:
-        aware = datetime(2026, 6, 20, 18, 0, 0, tzinfo=timezone.utc)
+        aware = datetime(2026, 6, 20, 18, 0, 0, tzinfo=UTC)
         h = DatasetHandle(
             dataset_id="d1",
             dataset_ref="ds-v1",
@@ -234,7 +234,7 @@ class TestDatasetHandle:
             name="orders",
             format=DatasetFormat.PARQUET,
             role=DatasetRole.DERIVED,
-            registered_at=datetime(2026, 6, 20, 18, 0, 0, tzinfo=timezone.utc),
+            registered_at=datetime(2026, 6, 20, 18, 0, 0, tzinfo=UTC),
         )
         restored = DatasetHandle.model_validate(h.model_dump(mode="json"))
         assert restored == h
@@ -252,7 +252,7 @@ class TestSourceFileMetadata:
         assert m.last_modified_at is None
 
     def test_valid_with_all_optional_fields(self) -> None:
-        ts = datetime(2026, 6, 20, 18, 0, 0, tzinfo=timezone.utc)
+        ts = datetime(2026, 6, 20, 18, 0, 0, tzinfo=UTC)
         m = SourceFileMetadata(
             uri="/data/orders.parquet",
             size_bytes=1024,
@@ -282,7 +282,7 @@ class TestSourceFileMetadata:
             last_modified_at=datetime(2026, 6, 20, 18, 0, 0),
         )
         assert m.last_modified_at is not None
-        assert m.last_modified_at.tzinfo is timezone.utc
+        assert m.last_modified_at.tzinfo is UTC
 
     def test_round_trip(self) -> None:
         m = SourceFileMetadata(
@@ -326,9 +326,7 @@ class TestDatasetFingerprint:
 
     def test_negative_row_count_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            DatasetFingerprint(
-                algorithm="sha256", content_hash="abc", row_count=-1
-            )
+            DatasetFingerprint(algorithm="sha256", content_hash="abc", row_count=-1)
 
     def test_naive_datetime_normalized(self) -> None:
         fp = DatasetFingerprint(
@@ -337,7 +335,7 @@ class TestDatasetFingerprint:
             computed_at=datetime(2026, 6, 20, 18, 0, 0),
         )
         assert fp.computed_at is not None
-        assert fp.computed_at.tzinfo is timezone.utc
+        assert fp.computed_at.tzinfo is UTC
 
     def test_round_trip(self) -> None:
         fp = DatasetFingerprint(
@@ -394,9 +392,7 @@ class TestDatasetLoadRequest:
             DatasetLoadRequest(source_uri="")
 
     def test_round_trip(self) -> None:
-        r = DatasetLoadRequest(
-            source_uri="/x", format=DatasetFormat.CSV, name="orders"
-        )
+        r = DatasetLoadRequest(source_uri="/x", format=DatasetFormat.CSV, name="orders")
         restored = DatasetLoadRequest.model_validate(r.model_dump(mode="json"))
         assert restored == r
 
@@ -441,9 +437,9 @@ class TestIngestionReport:
         assert ing.fingerprint is fp
         # Naive datetimes are coerced to UTC by the model validator.
         assert ing.started_at is not None
-        assert ing.started_at.tzinfo is timezone.utc
+        assert ing.started_at.tzinfo is UTC
         assert ing.finished_at is not None
-        assert ing.finished_at.tzinfo is timezone.utc
+        assert ing.finished_at.tzinfo is UTC
 
     def test_unknown_format_requires_error_issue(self) -> None:
         # UNKNOWN detected format is allowed only when paired with at least
@@ -549,9 +545,7 @@ class TestDatasetLoadResult:
         assert res.status is ExecutionStatus.SKIPPED
 
     def test_round_trip(self) -> None:
-        req = DatasetLoadRequest(
-            source_uri="/x", format=DatasetFormat.PARQUET, name="orders"
-        )
+        req = DatasetLoadRequest(source_uri="/x", format=DatasetFormat.PARQUET, name="orders")
         res = DatasetLoadResult(
             request=req,
             status=ExecutionStatus.SUCCEEDED,
@@ -594,11 +588,7 @@ class TestRegisteredDatasetResult:
                 handle=_ok_handle(),
                 status=ExecutionStatus.SUCCEEDED,
                 ingestion=_ok_ingestion(),
-                issues=(
-                    Issue(
-                        code="DUP", severity=Severity.ERROR, message="duplicate"
-                    ),
-                ),
+                issues=(Issue(code="DUP", severity=Severity.ERROR, message="duplicate"),),
             )
 
     def test_failed_with_error_issue_ok(self) -> None:
@@ -606,9 +596,7 @@ class TestRegisteredDatasetResult:
             handle=_ok_handle(),
             status=ExecutionStatus.FAILED,
             ingestion=_ok_ingestion(),
-            issues=(
-                Issue(code="DUP", severity=Severity.ERROR, message="duplicate"),
-            ),
+            issues=(Issue(code="DUP", severity=Severity.ERROR, message="duplicate"),),
         )
         assert reg.status is ExecutionStatus.FAILED
 

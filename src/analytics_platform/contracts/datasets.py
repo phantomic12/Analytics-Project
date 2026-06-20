@@ -28,7 +28,7 @@ pipeline orchestration. This module defines *typed shapes only*.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Annotated
 
@@ -216,7 +216,7 @@ class DatasetHandle(_DatasetsContractModel):
         default=DatasetMaterializationStatus.REGISTERED,
         description="Current materialization status of the underlying object.",
     )
-    fingerprint: "DatasetFingerprint | None" = Field(
+    fingerprint: DatasetFingerprint | None = Field(
         default=None,
         description="Optional content/source fingerprint for the dataset. See Task 20.",
     )
@@ -249,7 +249,7 @@ class DatasetHandle(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _registered_at_is_timezone_aware(self) -> "DatasetHandle":
+    def _registered_at_is_timezone_aware(self) -> DatasetHandle:
         if self.registered_at is not None and self.registered_at.tzinfo is None:
             # Convert naive datetimes to UTC instead of rejecting them. This
             # keeps common JSON-deserialization paths ergonomic while still
@@ -257,7 +257,7 @@ class DatasetHandle(_DatasetsContractModel):
             object.__setattr__(
                 self,
                 "registered_at",
-                self.registered_at.replace(tzinfo=timezone.utc),
+                self.registered_at.replace(tzinfo=UTC),
             )
         return self
 
@@ -323,12 +323,12 @@ class SourceFileMetadata(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _last_modified_at_is_timezone_aware(self) -> "SourceFileMetadata":
+    def _last_modified_at_is_timezone_aware(self) -> SourceFileMetadata:
         if self.last_modified_at is not None and self.last_modified_at.tzinfo is None:
             object.__setattr__(
                 self,
                 "last_modified_at",
-                self.last_modified_at.replace(tzinfo=timezone.utc),
+                self.last_modified_at.replace(tzinfo=UTC),
             )
         return self
 
@@ -401,12 +401,12 @@ class DatasetFingerprint(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _computed_at_is_timezone_aware(self) -> "DatasetFingerprint":
+    def _computed_at_is_timezone_aware(self) -> DatasetFingerprint:
         if self.computed_at is not None and self.computed_at.tzinfo is None:
             object.__setattr__(
                 self,
                 "computed_at",
-                self.computed_at.replace(tzinfo=timezone.utc),
+                self.computed_at.replace(tzinfo=UTC),
             )
         return self
 
@@ -517,7 +517,7 @@ class DatasetLoadResult(_DatasetsContractModel):
         default=None,
         description="Optional dataset handle produced on success.",
     )
-    ingestion: "IngestionReport" = Field(
+    ingestion: IngestionReport = Field(
         ...,
         description="Ingestion report summarizing the load attempt.",
     )
@@ -529,7 +529,7 @@ class DatasetLoadResult(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _handle_consistent_with_status(self) -> "DatasetLoadResult":
+    def _handle_consistent_with_status(self) -> DatasetLoadResult:
         status = self.status
         # ``is None`` is checked because ExecutionStatus is a str-Enum, so a
         # truthy check would also match ``SUCCEEDED.value``.
@@ -620,24 +620,21 @@ class IngestionReport(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _timestamps_are_timezone_aware(self) -> "IngestionReport":
+    def _timestamps_are_timezone_aware(self) -> IngestionReport:
         for field_name in ("started_at", "finished_at"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=UTC))
         return self
 
     @model_validator(mode="after")
-    def _has_error_issue_when_format_unknown(self) -> "IngestionReport":
+    def _has_error_issue_when_format_unknown(self) -> IngestionReport:
         # An UNKNOWN detected format must be accompanied by at least one
         # ERROR-or-higher Issue so downstream stages cannot silently treat
         # an unclassified file as a successful load.
         if self.detected_format is DatasetFormat.UNKNOWN:
             has_error = any(
-                issue.severity in (Severity.ERROR, Severity.CRITICAL)
-                for issue in self.issues
+                issue.severity in (Severity.ERROR, Severity.CRITICAL) for issue in self.issues
             )
             if not has_error:
                 raise ValueError(
@@ -705,7 +702,7 @@ class RegisteredDatasetResult(_DatasetsContractModel):
     )
 
     @model_validator(mode="after")
-    def _succeeded_status_requires_no_error_issues(self) -> "RegisteredDatasetResult":
+    def _succeeded_status_requires_no_error_issues(self) -> RegisteredDatasetResult:
         if self.status is not ExecutionStatus.SUCCEEDED:
             return self
         for issue in self.issues:
