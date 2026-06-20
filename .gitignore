@@ -1,0 +1,127 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+*.whl
+MANIFEST
+
+# Byte-compiled / optimized files
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ---------------------------------------------------------------------------
+# uv
+# ---------------------------------------------------------------------------
+# uv manages the lockfile; keep it tracked, not ignored.
+# uv.lock
+.uv-cache/
+
+# ---------------------------------------------------------------------------
+# Type checker / lint / test caches
+# ---------------------------------------------------------------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.cache
+nosetests.xml
+
+# ---------------------------------------------------------------------------
+# Build / packaging artifacts
+# ---------------------------------------------------------------------------
+pip-wheel-metadata/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---------------------------------------------------------------------------
+# Project artifacts: generated reports, manifests, and data artifacts
+# ---------------------------------------------------------------------------
+# Generated analytics outputs. Keep .gitkeep files so directories can be
+# created in later tasks.
+artifacts/
+reports/
+manifests/
+registry/
+runs/
+outputs/
+output/
+*.parquet
+!tests/**/*.parquet
+
+# Local datasets and fixtures that are generated or sensitive.
+data/
+datasets/
+fixtures/data/
+
+# ---------------------------------------------------------------------------
+# Secrets and local configuration
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.yaml
+secrets.json
+local_config.yaml
+
+# ---------------------------------------------------------------------------
+# Editor / IDE noise
+# ---------------------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-workspace
+*.sublime-project
+
+# ---------------------------------------------------------------------------
+# OS noise
+# ---------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini

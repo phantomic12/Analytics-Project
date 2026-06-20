@@ -1,0 +1,157 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "analytics-platform"
+version = "0.0.0"
+description = "Reproducible, contract-first analytics platform for large local tabular datasets."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Proprietary" }
+authors = [
+    { name = "Analytics Platform Team" },
+]
+keywords = [
+    "analytics",
+    "polars",
+    "regression",
+    "validation",
+    "contract-first",
+]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Development Status :: 2 - Pre-Alpha",
+]
+
+# Runtime/core dependencies (Build Queue v2.1 Task 2).
+# Lower-bound constraints only; exact versions are pinned in uv.lock.
+# Rationale per dependency is documented in
+# docs/architecture/dependency-policy-v1.1.md.
+dependencies = [
+    "pydantic>=2.5",
+    "polars>=0.20",
+    "pyarrow>=14.0",
+    "duckdb>=0.10",
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "statsmodels>=0.14",
+    "jinja2>=3.1",
+    "typer>=0.9",
+    "rich>=13.7",
+    "matplotlib>=3.8",
+]
+
+# Dev/test/quality dependencies (PEP 735 dependency groups).
+# uv installs the "dev" group by default with `uv sync` (see [tool.uv]).
+[dependency-groups]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.4",
+    "mypy>=1.8",
+]
+
+[project.urls]
+Homepage = "https://example.invalid/analytics-platform"
+Repository = "https://example.invalid/analytics-platform"
+Documentation = "https://example.invalid/analytics-platform/docs"
+
+# ---------------------------------------------------------------------------
+# Build configuration
+# ---------------------------------------------------------------------------
+# Source layout: implementation will live under src/analytics_platform/.
+# The package skeleton is created in Build Queue v2.1 Task 10.
+[tool.hatch.build.targets.wheel]
+packages = ["src/analytics_platform"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/analytics_platform",
+    "tests",
+    "docs",
+    "README.md",
+    "pyproject.toml",
+]
+
+# ---------------------------------------------------------------------------
+# Tool configuration
+# ---------------------------------------------------------------------------
+# Tool configuration (Ruff, pytest, type checker, uv lock policy) is declared
+# in Build Queue v2.1 Task 2. Settings may be tightened in later tasks.
+[tool.uv]
+# uv-managed environment and lockfile.
+# The project package is not built/installed until the src/analytics_platform
+# skeleton lands (Build Queue v2.1 Task 10). Flip `package` to true (or remove
+# this line) to enable editable install once the package exists.
+package = false
+# Install the dev/test/quality group by default with `uv sync`.
+default-groups = ["dev"]
+
+# ---------------------------------------------------------------------------
+# Ruff (lint + format)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "C4",  # comprehensions
+    "SIM", # simplify
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501", # line length is enforced by the formatter
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["analytics_platform"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "7.4"
+testpaths = ["tests"]
+addopts = "-ra"
+
+# ---------------------------------------------------------------------------
+# mypy
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_reexport = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+# Libraries that ship incomplete or missing type stubs. These overrides only
+# suppress import errors; runtime usage is still type-checked where stubs exist.
+[[tool.mypy.overrides]]
+module = [
+    "duckdb",
+    "scipy",
+    "scipy.*",
+    "statsmodels",
+    "statsmodels.*",
+    "matplotlib",
+    "matplotlib.*",
+]
+ignore_missing_imports = true
