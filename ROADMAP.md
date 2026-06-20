@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **17 done** · **124 remaining**
+**Totals**: 141 tasks · **21 done** · **120 remaining**
 
 ---
 
@@ -90,15 +90,15 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define table/chart artifact references
   - Files: `src/analytics_platform/contracts/visuals.py; docs/contracts/visual-artifact-contracts.md; tests/contracts/test_visual_contracts.py`
   - Commit: `Add visual artifact contracts`
-- [ ] **#18** Dataset identity and handle contracts _(effort: Max)_
+- [x] **#18** Dataset identity and handle contracts _(effort: Max)_
   - Goal: Define stable dataset references without dataframes
   - Files: `src/analytics_platform/contracts/datasets.py; tests/contracts/test_dataset_handle_contracts.py`
   - Commit: `Add dataset handle contracts`
-- [ ] **#19** Dataset load and ingestion contracts _(effort: Max)_
+- [x] **#19** Dataset load and ingestion contracts _(effort: Max)_
   - Goal: Define dataset load request/result contracts
   - Files: `src/analytics_platform/contracts/datasets.py; tests/contracts/test_dataset_load_contracts.py`
   - Commit: `Add dataset load contracts`
-- [ ] **#20** Dataset fingerprint contracts _(effort: Max)_
+- [x] **#20** Dataset fingerprint contracts _(effort: Max)_
   - Goal: Define content/source fingerprint contracts
   - Files: `src/analytics_platform/contracts/datasets.py; tests/contracts/test_dataset_fingerprint_contracts.py`
   - Commit: `Add dataset fingerprint contracts`
@@ -202,7 +202,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define top-level pipeline run result
   - Files: `src/analytics_platform/contracts/pipeline.py; tests/contracts/test_analysis_run_result_contracts.py`
   - Commit: `Add analysis run result contracts`
-- [ ] **#46** Contract index exports _(effort: High)_
+- [x] **#46** Contract index exports _(effort: High)_
   - Goal: Stabilize contract package exports
   - Files: `src/analytics_platform/contracts/__init__.py; tests/contracts/test_contract_exports.py`
   - Commit: `Stabilize contract exports`
