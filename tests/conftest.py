@@ -10,6 +10,21 @@ allowed file scope for Build Queue v2.1 Task 10. To keep test discovery working
 without touching ``pyproject.toml``, we add the ``src`` directory to
 ``sys.path`` here. This is intentionally minimal; once editable installs or a
 ``pythonpath`` setting are enabled, this block can be removed.
+
+Heavy-library test isolation:
+
+Tests that import heavy libraries at module load time
+(``tests/test_polars_backend.py`` for Task 82, future
+``tests/test_duckdb_backend.py`` for Task 112) leave those
+libraries in ``sys.modules`` after they run. That pollutes
+``sys.modules`` for downstream "do not import heavy libs"
+guard tests, which then flake. The pragmatic fix for the v1.1
+MVP is to run heavy-library tests in a fresh subprocess; that
+is configured via the ``[tool.pytest.ini_options]`` addopts
+entry ``--forked`` once ``pytest-forked`` is added to the dev
+group. Until then, the guard tests can be excluded with
+``uv run pytest tests/ --ignore=tests/test_polars_backend.py``
+when developing locally.
 """
 
 from __future__ import annotations
