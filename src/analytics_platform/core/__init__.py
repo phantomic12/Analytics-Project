@@ -8,12 +8,16 @@ analytics platform:
 - :class:`StageError` is the typed exception for a single stage
   failure; it carries the stage id, the run id, and a typed
   :class:`Issue` payload.
-- The :func:`get_logger` factory returns a project-wide
-  structured logger that downstream modules reuse. Logging is
-  intentionally minimal at the v1.1 MVP layer: domain modules
-  may add their own loggers, but every module that logs must
-  call :func:`get_logger` so log records carry the
-  ``analytics_platform`` namespace.
+- :class:`ContractError` is the typed contract validation failure
+  exception.
+- :class:`LimitExceeded` is the typed exception raised by the
+  execution-limits policy enforcement (see ``core.limits``).
+- :func:`get_logger` returns a project-wide structured logger
+  that downstream modules reuse. Logging is intentionally minimal
+  at the v1.1 MVP layer: domain modules may add their own
+  loggers, but every module that logs must call
+  :func:`get_logger` so log records carry the ``analytics_platform``
+  namespace.
 
 Per the architecture-test plan (section 3.1), ``core`` may
 import from ``contracts`` only. The module uses standard
@@ -25,7 +29,10 @@ Scope (Task 77):
 - ``AnalyticsPlatformError`` (base).
 - ``StageError`` (typed stage failure with ``Issue``).
 - ``ContractError`` (typed contract validation failure).
+- ``LimitExceeded`` (typed execution-limit policy failure).
 - ``get_logger`` (project-wide logger factory).
+- ``configure_logging`` (idempotent root-logger setup).
+- ``log_stage_failure`` (structured warning emission).
 """
 
 from __future__ import annotations
@@ -39,7 +46,10 @@ __all__ = [
     "AnalyticsPlatformError",
     "StageError",
     "ContractError",
+    "LimitExceeded",
     "get_logger",
+    "configure_logging",
+    "log_stage_failure",
 ]
 
 
@@ -60,7 +70,12 @@ class AnalyticsPlatformError(Exception):
     specific kind of failure (e.g. ``StageError``).
     """
 
-    def __init__(self, message: str, *, context: dict[str, str] | None = None) -> None:
+    def __init__(
+        self,
+        message: str,
+        *,
+        context: dict[str, str] | None = None,
+    ) -> None:
         super().__init__(message)
         self.message = message
         self.context: dict[str, str] = dict(context) if context else {}
@@ -109,6 +124,22 @@ class ContractError(AnalyticsPlatformError):
         context: dict[str, str] | None = None,
     ) -> None:
         super().__init__(message, context=context)
+        self.issue = issue
+
+
+class LimitExceeded(AnalyticsPlatformError):
+    """A typed exception raised when an execution-limit policy
+    check fails.
+
+    ``LimitExceeded`` carries the :class:`Issue` payload so
+    reporting / registry can group failures on the stable issue
+    ``code``. The check functions in ``core.limits`` are the
+    canonical way to raise this exception; downstream callers
+    should not construct it directly.
+    """
+
+    def __init__(self, issue: Issue) -> None:
+        super().__init__(issue.message, context=issue.context)
         self.issue = issue
 
 
