@@ -14,26 +14,35 @@ domain implementation module (``core``, ``reporting``, ``pipeline``,
 
 Build order and family ownership follow ``docs/contracts/contracts-index-v1.1.md``:
 
-- ``common`` (Task 11) — base IDs, status, issues, warnings, metrics,
+- ``common`` (Task 11) - base IDs, status, issues, warnings, metrics,
   artifacts, and ``StageResult``. Imported from
   ``analytics_platform.contracts.common``.
 - ``execution`` (Tasks 12-14) - backend-neutral execution references,
   materialization, and limit policies. Imported from
   ``analytics_platform.contracts.execution``.
-- ``artifacts`` (Task 15) — durable artifact references and storage
+- ``artifacts`` (Task 15) - durable artifact references and storage
   policy. Imported from ``analytics_platform.contracts.artifacts``.
-- ``cache`` (Task 16) — cache keys, fingerprints, and invalidation
+- ``cache`` (Task 16) - cache keys, fingerprints, and invalidation
   reasons. Imported from ``analytics_platform.contracts.cache``.
-- ``visuals`` (Task 17) — table/chart artifact references. Imported from
-  ``analytics_platform.contracts.visuals``.
+- ``visuals`` (Task 17) - table/chart artifact references. Imported
+  from ``analytics_platform.contracts.visuals``.
 - ``datasets`` (Tasks 18-20) - dataset identity, load, ingestion, and
   fingerprint contracts. Imported from
   ``analytics_platform.contracts.datasets``.
+- ``lineage`` (Task 21) - lineage records, references, and graph
+  snapshots. Imported from ``analytics_platform.contracts.lineage``.
+- ``schemas`` (Task 22) - schema inference and validation. Imported
+  from ``analytics_platform.contracts.schemas``.
+- ``semantics`` (Task 23) - semantic column typing. Imported from
+  ``analytics_platform.contracts.semantics``.
+- ``quality`` (Task 24) - data quality and missingness. Imported
+  from ``analytics_platform.contracts.quality``.
+- ``profiling`` (Task 25) - distribution profiles. Imported from
+  ``analytics_platform.contracts.profiling``.
 
-Later families (lineage, schemas, semantics, quality, profiling,
-associations, joins, features, statistics, modeling, validation,
-reporting, registry, pipeline) are re-exported here only once their
-Build Queue contract tasks land.
+Later families (associations, joins, features, statistics, modeling,
+validation, reporting, registry, pipeline) are re-exported here only
+once their Build Queue contract tasks land.
 """
 
 from __future__ import annotations
@@ -94,6 +103,71 @@ from analytics_platform.contracts.execution import (
     MemoryBudgetPolicy,
     PandasConversionMode,
     PandasConversionPolicy,
+)
+from analytics_platform.contracts.lineage import (
+    DerivedDatasetRef,
+    LineageGraphSnapshot,
+    LineageOperationType,
+    LineageRecord,
+    SourceDatasetRef,
+    TransformationId,
+    TransformationRef,
+)
+from analytics_platform.contracts.profiling import (
+    CardinalityProfile,
+    CategoricalProfile,
+    ColumnProfile,
+    ConstantColumnWarning,
+    DatasetProfile,
+    DatetimeProfile,
+    DistributionSummary,
+    DuplicateProfile,
+    FrequencySummary,
+    HighCardinalityWarning,
+    MissingnessProfile,
+    NumericProfile,
+    OutlierDetectionMethod,
+    OutlierProfile,
+    ProfileApproximationMethod,
+    ProfileComputationMode,
+    ProfilingRequest,
+    ProfilingSpec,
+    QuantileSummary,
+)
+from analytics_platform.contracts.quality import (
+    ColumnMissingness,
+    DataQualityIssue,
+    DataQualityIssueKind,
+    DataQualityReport,
+    JoinIntroducedMissingness,
+    MissingDataReport,
+    MissingnessPatternSummary,
+    ModelExclusionReason,
+    ModelExclusionSummary,
+    RowMissingnessSummary,
+)
+from analytics_platform.contracts.schemas import (
+    ColumnName,
+    ColumnSchema,
+    ExpectedColumnSchema,
+    ExpectedSchema,
+    LogicalDataType,
+    ObservedSchema,
+    PhysicalDataType,
+    SchemaInferenceRequest,
+    SchemaIssue,
+    SchemaValidationReport,
+    SchemaValidationRequest,
+)
+from analytics_platform.contracts.semantics import (
+    ColumnRole,
+    ColumnRoleAssignment,
+    RiskyColumnUse,
+    SemanticColumnProfile,
+    SemanticColumnType,
+    SemanticTypeConfidence,
+    SemanticTypeInferenceReport,
+    SemanticTypeInferenceRequest,
 )
 from analytics_platform.contracts.visuals import (
     ChartArtifactRef,
@@ -158,4 +232,64 @@ __all__ = [
     "RegisteredDatasetResult",
     "SourceFileMetadata",
     "StorageBackend",
+    # lineage (Task 21)
+    "DerivedDatasetRef",
+    "LineageGraphSnapshot",
+    "LineageOperationType",
+    "LineageRecord",
+    "SourceDatasetRef",
+    "TransformationId",
+    "TransformationRef",
+    # schemas (Task 22)
+    "ColumnName",
+    "ColumnSchema",
+    "ExpectedColumnSchema",
+    "ExpectedSchema",
+    "LogicalDataType",
+    "ObservedSchema",
+    "PhysicalDataType",
+    "SchemaInferenceRequest",
+    "SchemaIssue",
+    "SchemaValidationReport",
+    "SchemaValidationRequest",
+    # semantics (Task 23)
+    "ColumnRole",
+    "ColumnRoleAssignment",
+    "RiskyColumnUse",
+    "SemanticColumnProfile",
+    "SemanticColumnType",
+    "SemanticTypeConfidence",
+    "SemanticTypeInferenceReport",
+    "SemanticTypeInferenceRequest",
+    # quality (Task 24)
+    "ColumnMissingness",
+    "DataQualityIssue",
+    "DataQualityIssueKind",
+    "DataQualityReport",
+    "JoinIntroducedMissingness",
+    "MissingDataReport",
+    "MissingnessPatternSummary",
+    "ModelExclusionReason",
+    "ModelExclusionSummary",
+    "RowMissingnessSummary",
+    # profiling (Task 25)
+    "CardinalityProfile",
+    "CategoricalProfile",
+    "ColumnProfile",
+    "ConstantColumnWarning",
+    "DatasetProfile",
+    "DatetimeProfile",
+    "DistributionSummary",
+    "DuplicateProfile",
+    "FrequencySummary",
+    "HighCardinalityWarning",
+    "MissingnessProfile",
+    "NumericProfile",
+    "OutlierDetectionMethod",
+    "OutlierProfile",
+    "ProfileApproximationMethod",
+    "ProfileComputationMode",
+    "ProfilingRequest",
+    "ProfilingSpec",
+    "QuantileSummary",
 ]
