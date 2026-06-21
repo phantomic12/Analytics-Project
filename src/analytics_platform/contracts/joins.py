@@ -219,12 +219,8 @@ class JoinKeySpec(_JoinsContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    left_column: ColumnName = Field(
-        ..., description="ColumnName of the left-side key column."
-    )
-    right_column: ColumnName = Field(
-        ..., description="ColumnName of the right-side key column."
-    )
+    left_column: ColumnName = Field(..., description="ColumnName of the left-side key column.")
+    right_column: ColumnName = Field(..., description="ColumnName of the right-side key column.")
     notes: str | None = Field(
         default=None,
         max_length=512,
@@ -315,8 +311,7 @@ class JoinSpec(_JoinsContractModel):
     def _datasets_differ(self) -> "JoinSpec":
         if self.left_dataset.dataset_id == self.right_dataset.dataset_id:
             raise ValueError(
-                "JoinSpec.left_dataset and right_dataset must refer to "
-                "different datasets."
+                "JoinSpec.left_dataset and right_dataset must refer to different datasets."
             )
         return self
 
@@ -326,9 +321,7 @@ class JoinSpec(_JoinsContractModel):
         for k in self.keys:
             key = (k.left_column, k.right_column)
             if key in seen:
-                raise ValueError(
-                    f"JoinSpec.keys has duplicate key: {key!r}."
-                )
+                raise ValueError(f"JoinSpec.keys has duplicate key: {key!r}.")
             seen.add(key)
         return self
 
@@ -353,9 +346,7 @@ class JoinValidationRequest(_JoinsContractModel):
     """
 
     spec: JoinSpec = Field(..., description="JoinSpec to validate.")
-    max_join_induced_missingness_ratio: Annotated[
-        float, Field(ge=0.0, le=1.0)
-    ] = Field(
+    max_join_induced_missingness_ratio: Annotated[float, Field(ge=0.0, le=1.0)] = Field(
         default=0.1,
         description=(
             "Optional non-negative bounded ratio in [0.0, 1.0] for join-induced "
@@ -411,9 +402,7 @@ class JoinValidationReport(_JoinsContractModel):
     approval_status: JoinApprovalStatus = Field(
         ..., description="JoinApprovalStatus produced by validation."
     )
-    risk_level: JoinRiskLevel = Field(
-        ..., description="JoinRiskLevel produced by validation."
-    )
+    risk_level: JoinRiskLevel = Field(..., description="JoinRiskLevel produced by validation.")
     observed_cardinality: JoinCardinality | None = Field(
         default=None,
         description="Optional observed JoinCardinality.",
@@ -461,10 +450,7 @@ class JoinValidationReport(_JoinsContractModel):
                 "JoinValidationReport with approval_status=BLOCKED must include "
                 "a non-empty block_reason."
             )
-        if (
-            self.approval_status is not JoinApprovalStatus.BLOCKED
-            and self.block_reason
-        ):
+        if self.approval_status is not JoinApprovalStatus.BLOCKED and self.block_reason:
             raise ValueError(
                 "JoinValidationReport with approval_status != BLOCKED must not "
                 "include a block_reason."
@@ -476,8 +462,7 @@ class JoinValidationReport(_JoinsContractModel):
         for _col, ratio in self.join_induced_missingness:
             if not (0.0 <= ratio <= 1.0):
                 raise ValueError(
-                    "JoinValidationReport.join_induced_missingness ratios must "
-                    "be in [0.0, 1.0]."
+                    "JoinValidationReport.join_induced_missingness ratios must be in [0.0, 1.0]."
                 )
         return self
 
@@ -635,9 +620,7 @@ class JoinExecutionReport(_JoinsContractModel):
         for field_name in ("started_at", "finished_at"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=timezone.utc))
         return self
 
 
@@ -678,12 +661,8 @@ class JoinedDatasetResult(_JoinsContractModel):
         ...,
         description="DatasetHandle registered as the joined output.",
     )
-    left_dataset_id: DatasetId = Field(
-        ..., description="DatasetId of the left side."
-    )
-    right_dataset_id: DatasetId = Field(
-        ..., description="DatasetId of the right side."
-    )
+    left_dataset_id: DatasetId = Field(..., description="DatasetId of the left side.")
+    right_dataset_id: DatasetId = Field(..., description="DatasetId of the right side.")
     result_dataset_ref: DatasetRef | None = Field(
         default=None,
         description="Optional stable DatasetRef (catalog key).",

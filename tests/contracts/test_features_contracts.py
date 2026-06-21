@@ -253,9 +253,7 @@ class TestFeatureEligibilityReport:
 
     def test_missing_target_forbids_eligible(self) -> None:
         with pytest.raises(ValidationError):
-            FeatureEligibilityReport(
-                target_present=False, eligible=True, block_reason="x"
-            )
+            FeatureEligibilityReport(target_present=False, eligible=True, block_reason="x")
 
     def test_not_eligible_requires_block_reason(self) -> None:
         with pytest.raises(ValidationError):
@@ -263,9 +261,7 @@ class TestFeatureEligibilityReport:
 
     def test_eligible_forbids_block_reason(self) -> None:
         with pytest.raises(ValidationError):
-            FeatureEligibilityReport(
-                target_present=True, eligible=True, block_reason="x"
-            )
+            FeatureEligibilityReport(target_present=True, eligible=True, block_reason="x")
 
     def test_missing_required_features_forbids_eligible(self) -> None:
         with pytest.raises(ValidationError):
@@ -286,9 +282,7 @@ class TestFeatureEligibilityReport:
 
     def test_round_trip(self) -> None:
         r = FeatureEligibilityReport(target_present=True)
-        assert FeatureEligibilityReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert FeatureEligibilityReport.model_validate(r.model_dump(mode="json")) == r
 
 
 # ---------------------------------------------------------------------------
@@ -325,7 +319,12 @@ class TestFeatureTransformationPlan:
         p = FeatureTransformationPlan(
             plan_id="plan-1",
             per_feature_steps=(
-                ("age", MissingValueStrategy.IMPUTE_MEAN, EncodingStrategy.ONE_HOT, ScalingStrategy.STANDARD),
+                (
+                    "age",
+                    MissingValueStrategy.IMPUTE_MEAN,
+                    EncodingStrategy.ONE_HOT,
+                    ScalingStrategy.STANDARD,
+                ),
             ),
         )
         assert len(p.per_feature_steps) == 1
@@ -336,7 +335,12 @@ class TestFeatureTransformationPlan:
                 plan_id="plan-1",
                 per_feature_steps=(
                     ("age", MissingValueStrategy.NONE, EncodingStrategy.NONE, ScalingStrategy.NONE),
-                    ("age", MissingValueStrategy.IMPUTE_MEAN, EncodingStrategy.ONE_HOT, ScalingStrategy.STANDARD),
+                    (
+                        "age",
+                        MissingValueStrategy.IMPUTE_MEAN,
+                        EncodingStrategy.ONE_HOT,
+                        ScalingStrategy.STANDARD,
+                    ),
                 ),
             )
 
@@ -353,7 +357,12 @@ class TestFeatureTransformationReport:
                 plan_id="plan-1",
                 executed_steps=(
                     ("age", MissingValueStrategy.NONE, EncodingStrategy.NONE, ScalingStrategy.NONE),
-                    ("age", MissingValueStrategy.IMPUTE_MEAN, EncodingStrategy.ONE_HOT, ScalingStrategy.STANDARD),
+                    (
+                        "age",
+                        MissingValueStrategy.IMPUTE_MEAN,
+                        EncodingStrategy.ONE_HOT,
+                        ScalingStrategy.STANDARD,
+                    ),
                 ),
             )
 
@@ -378,9 +387,7 @@ class TestFeatureMatrix:
             FeatureMatrixRef(matrix_id="m1", dataset_id="d1", row_count=-1)
 
     def test_result(self) -> None:
-        r = FeatureMatrixResult(
-            matrix_ref=FeatureMatrixRef(matrix_id="m1", dataset_id="d1")
-        )
+        r = FeatureMatrixResult(matrix_ref=FeatureMatrixRef(matrix_id="m1", dataset_id="d1"))
         assert r.row_exclusions is None
         assert r.column_exclusions is None
 
@@ -406,9 +413,7 @@ class TestRowsExcludedReport:
     def test_negative_count_rejected(self) -> None:
         with pytest.raises(ValidationError):
             RowsExcludedReport(
-                reason_breakdown=(
-                    (FeatureExclusionReason.HIGH_MISSINGNESS, -1),
-                ),
+                reason_breakdown=((FeatureExclusionReason.HIGH_MISSINGNESS, -1),),
             )
 
     def test_ratio_above_one_rejected(self) -> None:
@@ -423,9 +428,7 @@ class TestColumnsExcludedReport:
 
     def test_count_exceeds_total_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ColumnsExcludedReport(
-                excluded_column_count=200, total_column_count=100
-            )
+            ColumnsExcludedReport(excluded_column_count=200, total_column_count=100)
 
     def test_duplicate_column_names_rejected(self) -> None:
         with pytest.raises(ValidationError):

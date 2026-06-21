@@ -86,6 +86,8 @@ CONTRACT_MODULES: tuple[str, ...] = (
     "associations",
     "joins",
     "features",
+    # statistics, modeling, validation, reporting, registry, pipeline
+    # are deferred to later PRs.
 )
 
 
@@ -112,9 +114,7 @@ class TestFileSize:
     def test_contract_module_under_hard_max(self, module_name: str) -> None:
         path = SRC_DIR / "contracts" / f"{module_name}.py"
         if not path.exists():
-            pytest.skip(
-                f"Contract module {module_name!r} not present yet (deferred)."
-            )
+            pytest.skip(f"Contract module {module_name!r} not present yet (deferred).")
         line_count = _count_lines(path)
         assert line_count <= HARD_MAX_LINES, (
             f"Contract module {path.relative_to(REPO_ROOT)} has "
@@ -243,11 +243,9 @@ class TestImportBoundary:
                             root = alias.name.split(".", 2)
                             if len(root) >= 2 and root[1] in forbidden_roots:
                                 offenders.append(
-                                    f"{path.name}: imports "
-                                    f"{alias.name!r} (forbidden domain module)"
+                                    f"{path.name}: imports {alias.name!r} (forbidden domain module)"
                                 )
 
-        assert not offenders, (
-            "Contract modules import forbidden modules:\n  - "
-            + "\n  - ".join(offenders)
+        assert not offenders, "Contract modules import forbidden modules:\n  - " + "\n  - ".join(
+            offenders
         )

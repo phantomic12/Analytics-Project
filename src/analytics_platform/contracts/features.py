@@ -249,9 +249,7 @@ class TargetSpec(_FeaturesContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    column_name: ColumnName = Field(
-        ..., description="ColumnName of the target column."
-    )
+    column_name: ColumnName = Field(..., description="ColumnName of the target column.")
     task: TargetTask = Field(..., description="Target task type.")
     positive_class: str | None = Field(
         default=None,
@@ -270,9 +268,7 @@ class TargetSpec(_FeaturesContractModel):
         if self.task is TargetTask.CLASSIFICATION:
             return self
         if self.positive_class is not None:
-            raise ValueError(
-                "TargetSpec.positive_class is only valid for CLASSIFICATION."
-            )
+            raise ValueError("TargetSpec.positive_class is only valid for CLASSIFICATION.")
         return self
 
 
@@ -290,9 +286,7 @@ class FeatureSpec(_FeaturesContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    column_name: ColumnName = Field(
-        ..., description="ColumnName of the feature column."
-    )
+    column_name: ColumnName = Field(..., description="ColumnName of the feature column.")
     role: ColumnRole = Field(
         default=ColumnRole.FEATURE,
         description="ColumnRole. Defaults to FEATURE.",
@@ -380,28 +374,15 @@ class SplitSpec(_FeaturesContractModel):
     @model_validator(mode="after")
     def _strategy_dependencies_consistent(self) -> "SplitSpec":
         if self.strategy is SplitStrategy.TIME and self.time_column is None:
-            raise ValueError(
-                "SplitSpec with strategy=TIME must include a time_column."
-            )
+            raise ValueError("SplitSpec with strategy=TIME must include a time_column.")
         if self.strategy is SplitStrategy.GROUP and self.group_column is None:
-            raise ValueError(
-                "SplitSpec with strategy=GROUP must include a group_column."
-            )
+            raise ValueError("SplitSpec with strategy=GROUP must include a group_column.")
         if self.strategy is not SplitStrategy.TIME and self.time_column is not None:
-            raise ValueError(
-                "SplitSpec.time_column is only valid when strategy=TIME."
-            )
+            raise ValueError("SplitSpec.time_column is only valid when strategy=TIME.")
         if self.strategy is not SplitStrategy.GROUP and self.group_column is not None:
-            raise ValueError(
-                "SplitSpec.group_column is only valid when strategy=GROUP."
-            )
-        if (
-            self.strategy is SplitStrategy.STRATIFIED
-            and self.stratify_column is None
-        ):
-            raise ValueError(
-                "SplitSpec with strategy=STRATIFIED must include a stratify_column."
-            )
+            raise ValueError("SplitSpec.group_column is only valid when strategy=GROUP.")
+        if self.strategy is SplitStrategy.STRATIFIED and self.stratify_column is None:
+            raise ValueError("SplitSpec with strategy=STRATIFIED must include a stratify_column.")
         return self
 
     @model_validator(mode="after")
@@ -416,9 +397,7 @@ class SplitSpec(_FeaturesContractModel):
             if f is not None
         ]
         if fractions and sum(fractions) > 1.0:
-            raise ValueError(
-                "SplitSpec train/validation/test fractions must sum to <= 1.0."
-            )
+            raise ValueError("SplitSpec train/validation/test fractions must sum to <= 1.0.")
         return self
 
 
@@ -483,8 +462,7 @@ class FeatureBuildRequest(_FeaturesContractModel):
         feature_names = {f.column_name for f in self.features}
         if self.target.column_name in feature_names:
             raise ValueError(
-                "FeatureBuildRequest.target.column_name must not also "
-                "appear in features."
+                "FeatureBuildRequest.target.column_name must not also appear in features."
             )
         return self
 
@@ -492,8 +470,7 @@ class FeatureBuildRequest(_FeaturesContractModel):
     def _target_not_in_exclusions(self) -> "FeatureBuildRequest":
         if self.target.column_name in self.exclusions:
             raise ValueError(
-                "FeatureBuildRequest.target.column_name must not also "
-                "appear in exclusions."
+                "FeatureBuildRequest.target.column_name must not also appear in exclusions."
             )
         return self
 
@@ -585,8 +562,7 @@ class FeatureEligibilityReport(_FeaturesContractModel):
     def _eligibility_consistent(self) -> "FeatureEligibilityReport":
         if not self.target_present and self.eligible:
             raise ValueError(
-                "FeatureEligibilityReport with target_present=False must not "
-                "have eligible=True."
+                "FeatureEligibilityReport with target_present=False must not have eligible=True."
             )
         if not self.eligible and not self.block_reason:
             raise ValueError(
@@ -595,13 +571,11 @@ class FeatureEligibilityReport(_FeaturesContractModel):
             )
         if self.eligible and self.block_reason:
             raise ValueError(
-                "FeatureEligibilityReport with eligible=True must not include "
-                "a block_reason."
+                "FeatureEligibilityReport with eligible=True must not include a block_reason."
             )
         if self.missing_required_features and self.eligible:
             raise ValueError(
-                "FeatureEligibilityReport with missing_required_features must "
-                "have eligible=False."
+                "FeatureEligibilityReport with missing_required_features must have eligible=False."
             )
         return self
 
@@ -783,9 +757,7 @@ class FeatureMatrixRef(_FeaturesContractModel):
         max_length=256,
         description="Stable identifier for the matrix.",
     )
-    dataset_id: DatasetId = Field(
-        ..., description="DatasetId of the source dataset."
-    )
+    dataset_id: DatasetId = Field(..., description="DatasetId of the source dataset.")
     row_count: int | None = Field(
         default=None,
         ge=0,
@@ -827,9 +799,7 @@ class FeatureMatrixResult(_FeaturesContractModel):
     - ``metadata``: small bounded string-to-string metadata.
     """
 
-    matrix_ref: FeatureMatrixRef = Field(
-        ..., description="FeatureMatrixRef for the built matrix."
-    )
+    matrix_ref: FeatureMatrixRef = Field(..., description="FeatureMatrixRef for the built matrix.")
     row_exclusions: "RowsExcludedReport | None" = Field(
         default=None,
         description="Optional RowsExcludedReport.",
@@ -923,9 +893,7 @@ class RowsExcludedReport(_FeaturesContractModel):
     def _reason_breakdown_counts_non_negative(self) -> "RowsExcludedReport":
         for _reason, count in self.reason_breakdown:
             if count < 0:
-                raise ValueError(
-                    "RowsExcludedReport.reason_breakdown counts must be non-negative."
-                )
+                raise ValueError("RowsExcludedReport.reason_breakdown counts must be non-negative.")
         return self
 
 
@@ -1131,29 +1099,25 @@ class LeakageCheckReport(_FeaturesContractModel):
     def _passed_consistent(self) -> "LeakageCheckReport":
         if self.passed and not self.risks and self.block_reason:
             raise ValueError(
-                "LeakageCheckReport with passed=True and no risks must not "
-                "include a block_reason."
+                "LeakageCheckReport with passed=True and no risks must not include a block_reason."
             )
         if not self.passed and not self.block_reason:
             raise ValueError(
-                "LeakageCheckReport with passed=False must include a "
-                "non-empty block_reason."
+                "LeakageCheckReport with passed=False must include a non-empty block_reason."
             )
         return self
 
     @model_validator(mode="after")
     def _target_as_feature_flag_consistent(self) -> "LeakageCheckReport":
         if self.target_as_feature_detected is True and not any(
-            risk.risk_type is LeakageRiskType.TARGET_AS_FEATURE
-            for risk in self.risks
+            risk.risk_type is LeakageRiskType.TARGET_AS_FEATURE for risk in self.risks
         ):
             raise ValueError(
                 "LeakageCheckReport.target_as_feature_detected=True requires "
                 "at least one TARGET_AS_FEATURE risk."
             )
         if self.train_test_contamination_detected is True and not any(
-            risk.risk_type is LeakageRiskType.TRAIN_TEST_CONTAMINATION
-            for risk in self.risks
+            risk.risk_type is LeakageRiskType.TRAIN_TEST_CONTAMINATION for risk in self.risks
         ):
             raise ValueError(
                 "LeakageCheckReport.train_test_contamination_detected=True "

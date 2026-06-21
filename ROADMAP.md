@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **27 done** · **114 remaining**
+**Totals**: 141 tasks · **35 done** · **106 remaining**
 
 ---
 
@@ -122,27 +122,27 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define profiles and distribution summaries
   - Files: `src/analytics_platform/contracts/profiling.py; tests/contracts/test_profiling_contracts.py`
   - Commit: `Add profiling contracts`
-- [ ] **#26** Association diagnostic contracts _(effort: Max)_
+- [x] **#26** Association diagnostic contracts _(effort: Max)_
   - Goal: Define diagnostic association reports
   - Files: `src/analytics_platform/contracts/associations.py; tests/contracts/test_association_contracts.py`
   - Commit: `Add association diagnostic contracts`
-- [ ] **#27** Join contracts _(effort: Max)_
+- [x] **#27** Join contracts _(effort: Max)_
   - Goal: Define join validation and execution contracts
   - Files: `src/analytics_platform/contracts/joins.py; tests/contracts/test_join_contracts.py`
   - Commit: `Add join contracts`
-- [ ] **#28** Target and feature spec contracts _(effort: Max)_
+- [x] **#28** Target and feature spec contracts _(effort: Max)_
   - Goal: Define explicit target/features/exclusions
   - Files: `src/analytics_platform/contracts/features.py; tests/contracts/test_target_feature_spec_contracts.py`
   - Commit: `Add target and feature spec contracts`
-- [ ] **#29** Feature transformation contracts _(effort: Max)_
+- [x] **#29** Feature transformation contracts _(effort: Max)_
   - Goal: Define transformation plans and reports
   - Files: `src/analytics_platform/contracts/features.py; tests/contracts/test_feature_transformation_contracts.py`
   - Commit: `Add feature transformation contracts`
-- [ ] **#30** Feature matrix reference contracts _(effort: Max)_
+- [x] **#30** Feature matrix reference contracts _(effort: Max)_
   - Goal: Define model-ready matrix references
   - Files: `src/analytics_platform/contracts/features.py; tests/contracts/test_feature_matrix_contracts.py`
   - Commit: `Add feature matrix contracts`
-- [ ] **#31** Leakage contracts _(effort: Max)_
+- [x] **#31** Leakage contracts _(effort: Max)_
   - Goal: Define leakage request/report/risk contracts
   - Files: `src/analytics_platform/contracts/features.py; tests/contracts/test_leakage_contracts.py`
   - Commit: `Add leakage contracts`
@@ -312,7 +312,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 3 — Architecture Tests
 
-- [ ] **#72** Import boundary tests _(effort: Max)_
+- [x] **#72** Import boundary tests _(effort: Max)_
   - Goal: Prevent circular dependencies
   - Files: `tests/architecture/test_import_boundaries.py; tests/architecture/test_contracts_do_not_import_implementations.py`
   - Commit: `Add import boundary architecture tests`
@@ -324,7 +324,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Ensure reporting consumes contracts only
   - Files: `tests/architecture/test_reporting_does_not_import_domain_implementations.py; tests/architecture/test_domain_modules_do_not_import_pipeline.py`
   - Commit: `Add reporting architecture tests`
-- [ ] **#75** File-size architecture test _(effort: High)_
+- [x] **#75** File-size architecture test _(effort: High)_
   - Goal: Enforce modularity limits
   - Files: `tests/architecture/test_file_size_limits.py`
   - Commit: `Add file size architecture test`

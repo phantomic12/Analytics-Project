@@ -205,13 +205,9 @@ class AssociationCheckRequest(_AssociationsContractModel):
 
     @model_validator(mode="after")
     def _target_not_in_feature_columns(self) -> "AssociationCheckRequest":
-        if (
-            self.target_column is not None
-            and self.target_column in self.feature_columns
-        ):
+        if self.target_column is not None and self.target_column in self.feature_columns:
             raise ValueError(
-                "AssociationCheckRequest.target_column must not also appear "
-                "in feature_columns."
+                "AssociationCheckRequest.target_column must not also appear in feature_columns."
             )
         return self
 
@@ -221,8 +217,7 @@ class AssociationCheckRequest(_AssociationsContractModel):
         for col in self.feature_columns:
             if col in seen:
                 raise ValueError(
-                    f"AssociationCheckRequest.feature_columns has duplicate "
-                    f"column names: {col!r}."
+                    f"AssociationCheckRequest.feature_columns has duplicate column names: {col!r}."
                 )
             seen.add(col)
         return self
@@ -291,9 +286,7 @@ class PairwiseAssociationSummary(_AssociationsContractModel):
     @model_validator(mode="after")
     def _columns_must_differ(self) -> "PairwiseAssociationSummary":
         if self.column_a == self.column_b:
-            raise ValueError(
-                "PairwiseAssociationSummary.column_a and column_b must differ."
-            )
+            raise ValueError("PairwiseAssociationSummary.column_a and column_b must differ.")
         return self
 
     @model_validator(mode="after")
@@ -311,9 +304,7 @@ class PairwiseAssociationSummary(_AssociationsContractModel):
     @model_validator(mode="after")
     def _is_perfect_consistent_with_score(self) -> "PairwiseAssociationSummary":
         if self.is_perfect is True and self.score != 1.0:
-            raise ValueError(
-                "PairwiseAssociationSummary with is_perfect=True must have score=1.0."
-            )
+            raise ValueError("PairwiseAssociationSummary with is_perfect=True must have score=1.0.")
         if self.is_perfect is False and self.score == 1.0:
             raise ValueError(
                 "PairwiseAssociationSummary with is_perfect=False must not have score=1.0."
@@ -418,9 +409,10 @@ class MulticollinearityRiskSummary(_AssociationsContractModel):
 
     @model_validator(mode="after")
     def _high_risk_pair_count_consistent(self) -> "MulticollinearityRiskSummary":
-        if self.high_risk_pair_count is not None and len(
-            self.high_risk_pairs
-        ) != self.high_risk_pair_count:
+        if (
+            self.high_risk_pair_count is not None
+            and len(self.high_risk_pairs) != self.high_risk_pair_count
+        ):
             raise ValueError(
                 "MulticollinearityRiskSummary.high_risk_pair_count must equal "
                 "the length of high_risk_pairs."
@@ -432,8 +424,7 @@ class MulticollinearityRiskSummary(_AssociationsContractModel):
         for col_a, col_b in self.high_risk_pairs:
             if col_a == col_b:
                 raise ValueError(
-                    "MulticollinearityRiskSummary.high_risk_pairs must not "
-                    "contain self-pairs."
+                    "MulticollinearityRiskSummary.high_risk_pairs must not contain self-pairs."
                 )
             if col_a > col_b:
                 raise ValueError(
@@ -519,10 +510,7 @@ class AssociationCheckReport(_AssociationsContractModel):
 
     @model_validator(mode="after")
     def _multicollinearity_consistent_with_spec(self) -> "AssociationCheckReport":
-        if (
-            self.multicollinearity is not None
-            and not self.spec.emit_multicollinearity_summary
-        ):
+        if self.multicollinearity is not None and not self.spec.emit_multicollinearity_summary:
             raise ValueError(
                 "AssociationCheckReport.multicollinearity is set but the "
                 "spec.emit_multicollinearity_summary is False."
@@ -536,8 +524,7 @@ class AssociationCheckReport(_AssociationsContractModel):
             key = (summary.column_a, summary.column_b)
             if key in seen:
                 raise ValueError(
-                    f"AssociationCheckReport.pairwise_summaries has duplicate "
-                    f"pair: {key!r}."
+                    f"AssociationCheckReport.pairwise_summaries has duplicate pair: {key!r}."
                 )
             seen.add(key)
         return self
@@ -546,9 +533,7 @@ class AssociationCheckReport(_AssociationsContractModel):
     def _perfect_association_count_consistent(self) -> "AssociationCheckReport":
         if self.perfect_association_count is None:
             return self
-        actual = sum(
-            1 for s in self.pairwise_summaries if s.is_perfect is True
-        )
+        actual = sum(1 for s in self.pairwise_summaries if s.is_perfect is True)
         if self.perfect_association_count != actual:
             raise ValueError(
                 "AssociationCheckReport.perfect_association_count must match "

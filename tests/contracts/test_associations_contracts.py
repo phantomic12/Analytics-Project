@@ -64,9 +64,7 @@ def _handle() -> DatasetHandle:
 def _limits() -> ExecutionLimitPolicy:
     return ExecutionLimitPolicy(
         collect=CollectPolicy(mode=CollectMode.FORBIDDEN),
-        pandas_conversion=PandasConversionPolicy(
-            mode=PandasConversionMode.FORBIDDEN
-        ),
+        pandas_conversion=PandasConversionPolicy(mode=PandasConversionMode.FORBIDDEN),
         memory_budget=MemoryBudgetPolicy(max_bytes=2_000_000_000),
     )
 
@@ -119,9 +117,7 @@ class TestAssociationCheckSpec:
 # ---------------------------------------------------------------------------
 class TestAssociationCheckRequest:
     def test_minimal(self) -> None:
-        r = AssociationCheckRequest(
-            dataset=_handle(), execution_limits=_limits()
-        )
+        r = AssociationCheckRequest(dataset=_handle(), execution_limits=_limits())
         assert r.target_column is None
         assert r.feature_columns == ()
 
@@ -157,9 +153,7 @@ class TestAssociationCheckRequest:
 # ---------------------------------------------------------------------------
 class TestPairwiseAssociationSummary:
     def test_basic(self) -> None:
-        p = PairwiseAssociationSummary(
-            column_a="a", column_b="b", score=0.5
-        )
+        p = PairwiseAssociationSummary(column_a="a", column_b="b", score=0.5)
         assert p.column_a == "a"
         assert p.column_b == "b"
         assert p.score == 0.5
@@ -167,9 +161,7 @@ class TestPairwiseAssociationSummary:
     def test_canonical_ordering(self) -> None:
         # When the caller passes column_a > column_b, the validator
         # swaps so the pair is canonically ordered.
-        p = PairwiseAssociationSummary(
-            column_a="z", column_b="a", score=0.5
-        )
+        p = PairwiseAssociationSummary(column_a="z", column_b="a", score=0.5)
         assert p.column_a == "a"
         assert p.column_b == "z"
 
@@ -188,14 +180,10 @@ class TestPairwiseAssociationSummary:
     def test_is_perfect_consistent_with_score(self) -> None:
         # is_perfect=True requires score=1.0
         with pytest.raises(ValidationError):
-            PairwiseAssociationSummary(
-                column_a="a", column_b="b", score=0.9, is_perfect=True
-            )
+            PairwiseAssociationSummary(column_a="a", column_b="b", score=0.9, is_perfect=True)
         # is_perfect=False forbids score=1.0
         with pytest.raises(ValidationError):
-            PairwiseAssociationSummary(
-                column_a="a", column_b="b", score=1.0, is_perfect=False
-            )
+            PairwiseAssociationSummary(column_a="a", column_b="b", score=1.0, is_perfect=False)
 
     def test_is_perfect_default_none(self) -> None:
         p = PairwiseAssociationSummary(column_a="a", column_b="b", score=0.5)
@@ -203,15 +191,11 @@ class TestPairwiseAssociationSummary:
 
     def test_negative_sample_size_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            PairwiseAssociationSummary(
-                column_a="a", column_b="b", score=0.5, sample_size=-1
-            )
+            PairwiseAssociationSummary(column_a="a", column_b="b", score=0.5, sample_size=-1)
 
     def test_round_trip(self) -> None:
         p = PairwiseAssociationSummary(column_a="a", column_b="b", score=0.7)
-        assert PairwiseAssociationSummary.model_validate(
-            p.model_dump(mode="json")
-        ) == p
+        assert PairwiseAssociationSummary.model_validate(p.model_dump(mode="json")) == p
 
 
 # ---------------------------------------------------------------------------
@@ -219,9 +203,7 @@ class TestPairwiseAssociationSummary:
 # ---------------------------------------------------------------------------
 class TestAssociationWarning:
     def test_minimal(self) -> None:
-        w = AssociationWarning(
-            code="X", severity=Severity.WARNING, message="m"
-        )
+        w = AssociationWarning(code="X", severity=Severity.WARNING, message="m")
         assert w.column_a is None
 
     def test_with_pair(self) -> None:
@@ -238,14 +220,10 @@ class TestAssociationWarning:
 
     def test_score_above_one_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            AssociationWarning(
-                code="X", severity=Severity.WARNING, message="m", score=1.5
-            )
+            AssociationWarning(code="X", severity=Severity.WARNING, message="m", score=1.5)
 
     def test_round_trip(self) -> None:
-        w = AssociationWarning(
-            code="X", severity=Severity.WARNING, message="m"
-        )
+        w = AssociationWarning(code="X", severity=Severity.WARNING, message="m")
         assert AssociationWarning.model_validate(w.model_dump(mode="json")) == w
 
 
@@ -296,9 +274,7 @@ class TestMulticollinearityRiskSummary:
 
     def test_negative_max_vif_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            MulticollinearityRiskSummary(
-                high_risk_threshold=0.8, max_vif=-0.1
-            )
+            MulticollinearityRiskSummary(high_risk_threshold=0.8, max_vif=-0.1)
 
     def test_round_trip(self) -> None:
         m = MulticollinearityRiskSummary(
@@ -306,9 +282,7 @@ class TestMulticollinearityRiskSummary:
             high_risk_pair_count=1,
             high_risk_pairs=(("a", "b"),),
         )
-        assert MulticollinearityRiskSummary.model_validate(
-            m.model_dump(mode="json")
-        ) == m
+        assert MulticollinearityRiskSummary.model_validate(m.model_dump(mode="json")) == m
 
 
 # ---------------------------------------------------------------------------
@@ -316,9 +290,7 @@ class TestMulticollinearityRiskSummary:
 # ---------------------------------------------------------------------------
 class TestAssociationCheckReport:
     def test_minimal(self) -> None:
-        r = AssociationCheckReport(
-            dataset=_handle(), spec=AssociationCheckSpec()
-        )
+        r = AssociationCheckReport(dataset=_handle(), spec=AssociationCheckSpec())
         assert r.pairwise_summaries == ()
         assert r.multicollinearity is None
 
@@ -339,12 +311,8 @@ class TestAssociationCheckReport:
                 dataset=_handle(),
                 spec=AssociationCheckSpec(),
                 pairwise_summaries=(
-                    PairwiseAssociationSummary(
-                        column_a="a", column_b="b", score=0.5
-                    ),
-                    PairwiseAssociationSummary(
-                        column_a="a", column_b="b", score=0.7
-                    ),
+                    PairwiseAssociationSummary(column_a="a", column_b="b", score=0.5),
+                    PairwiseAssociationSummary(column_a="a", column_b="b", score=0.7),
                 ),
             )
 
@@ -353,9 +321,7 @@ class TestAssociationCheckReport:
             AssociationCheckReport(
                 dataset=_handle(),
                 spec=AssociationCheckSpec(emit_multicollinearity_summary=False),
-                multicollinearity=MulticollinearityRiskSummary(
-                    high_risk_threshold=0.8
-                ),
+                multicollinearity=MulticollinearityRiskSummary(high_risk_threshold=0.8),
             )
 
     def test_perfect_association_count_consistent(self) -> None:
@@ -365,9 +331,7 @@ class TestAssociationCheckReport:
                 dataset=_handle(),
                 spec=AssociationCheckSpec(),
                 pairwise_summaries=(
-                    PairwiseAssociationSummary(
-                        column_a="a", column_b="b", score=0.7
-                    ),
+                    PairwiseAssociationSummary(column_a="a", column_b="b", score=0.7),
                 ),
                 perfect_association_count=1,
             )
@@ -377,9 +341,7 @@ class TestAssociationCheckReport:
             dataset=_handle(),
             spec=AssociationCheckSpec(),
             pairwise_summaries=(
-                PairwiseAssociationSummary(
-                    column_a="a", column_b="b", score=1.0, is_perfect=True
-                ),
+                PairwiseAssociationSummary(column_a="a", column_b="b", score=1.0, is_perfect=True),
             ),
             perfect_association_count=1,
         )
@@ -391,11 +353,7 @@ class TestAssociationCheckReport:
             spec=AssociationCheckSpec(),
             issues=(Issue(code="I", severity=Severity.WARNING, message="m"),),
             common_warnings=(WarningRecord(code="W", message="m"),),
-            warnings=(
-                AssociationWarning(
-                    code="X", severity=Severity.WARNING, message="m"
-                ),
-            ),
+            warnings=(AssociationWarning(code="X", severity=Severity.WARNING, message="m"),),
         )
         assert len(r.issues) == 1
 
@@ -410,9 +368,7 @@ class TestAssociationCheckReport:
 
     def test_round_trip(self) -> None:
         r = AssociationCheckReport(dataset=_handle(), spec=AssociationCheckSpec())
-        assert AssociationCheckReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert AssociationCheckReport.model_validate(r.model_dump(mode="json")) == r
 
 
 # ---------------------------------------------------------------------------
@@ -431,6 +387,4 @@ def test_associations_contracts_do_not_import_heavy_libs() -> None:
 
     heavy = {"polars", "pandas", "duckdb", "numpy", "scipy", "statsmodels"}
     leaked = heavy.intersection(sys.modules)
-    assert not leaked, (
-        f"heavy libs imported by associations contracts: {leaked}"
-    )
+    assert not leaked, f"heavy libs imported by associations contracts: {leaked}"

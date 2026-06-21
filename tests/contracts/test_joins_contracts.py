@@ -68,9 +68,7 @@ def _left() -> DatasetHandle:
 
 
 def _right() -> DatasetHandle:
-    return DatasetHandle(
-        dataset_id="right", dataset_ref="ds-right", name="customers"
-    )
+    return DatasetHandle(dataset_id="right", dataset_ref="ds-right", name="customers")
 
 
 def _spec(
@@ -205,9 +203,7 @@ class TestJoinValidationRequest:
 
     def test_ratio_above_one_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            JoinValidationRequest(
-                spec=_spec(), max_join_induced_missingness_ratio=1.5
-            )
+            JoinValidationRequest(spec=_spec(), max_join_induced_missingness_ratio=1.5)
 
 
 # ---------------------------------------------------------------------------
@@ -409,9 +405,7 @@ class TestJoinedDatasetResult:
     def test_self_join_rejected(self) -> None:
         with pytest.raises(ValidationError):
             JoinedDatasetResult(
-                result_dataset=DatasetHandle(
-                    dataset_id="x", dataset_ref="ds-x", name="x"
-                ),
+                result_dataset=DatasetHandle(dataset_id="x", dataset_ref="ds-x", name="x"),
                 left_dataset_id="x",
                 right_dataset_id="x",
             )
@@ -419,9 +413,7 @@ class TestJoinedDatasetResult:
     def test_key_columns_lengths_must_match(self) -> None:
         with pytest.raises(ValidationError):
             JoinedDatasetResult(
-                result_dataset=DatasetHandle(
-                    dataset_id="j", dataset_ref="ds-j", name="j"
-                ),
+                result_dataset=DatasetHandle(dataset_id="j", dataset_ref="ds-j", name="j"),
                 left_dataset_id="left",
                 right_dataset_id="right",
                 left_key_columns=("id", "ts"),
@@ -431,9 +423,7 @@ class TestJoinedDatasetResult:
     def test_duplicate_column_conflicts_rejected(self) -> None:
         with pytest.raises(ValidationError):
             JoinedDatasetResult(
-                result_dataset=DatasetHandle(
-                    dataset_id="j", dataset_ref="ds-j", name="j"
-                ),
+                result_dataset=DatasetHandle(dataset_id="j", dataset_ref="ds-j", name="j"),
                 left_dataset_id="left",
                 right_dataset_id="right",
                 column_conflicts_applied=(
@@ -445,9 +435,7 @@ class TestJoinedDatasetResult:
     def test_negative_row_counts_rejected(self) -> None:
         with pytest.raises(ValidationError):
             JoinedDatasetResult(
-                result_dataset=DatasetHandle(
-                    dataset_id="j", dataset_ref="ds-j", name="j"
-                ),
+                result_dataset=DatasetHandle(dataset_id="j", dataset_ref="ds-j", name="j"),
                 left_dataset_id="left",
                 right_dataset_id="right",
                 left_row_count=-1,
@@ -455,9 +443,7 @@ class TestJoinedDatasetResult:
 
     def test_naive_produced_at_normalized(self) -> None:
         r = JoinedDatasetResult(
-            result_dataset=DatasetHandle(
-                dataset_id="j", dataset_ref="ds-j", name="j"
-            ),
+            result_dataset=DatasetHandle(dataset_id="j", dataset_ref="ds-j", name="j"),
             left_dataset_id="left",
             right_dataset_id="right",
             produced_at=datetime(2026, 6, 20, 18, 0, 0),
