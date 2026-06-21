@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **35 done** · **106 remaining**
+**Totals**: 141 tasks · **43 done** · **98 remaining**
 
 ---
 
@@ -146,31 +146,31 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define leakage request/report/risk contracts
   - Files: `src/analytics_platform/contracts/features.py; tests/contracts/test_leakage_contracts.py`
   - Commit: `Add leakage contracts`
-- [ ] **#32** Statistics contracts _(effort: Max)_
+- [x] **#32** Statistics contracts _(effort: Max)_
   - Goal: Define shared statistical primitives
   - Files: `src/analytics_platform/contracts/statistics.py; tests/contracts/test_statistics_contracts.py`
   - Commit: `Add statistical primitive contracts`
-- [ ] **#33** Model spec contracts _(effort: Max)_
+- [x] **#33** Model spec contracts _(effort: Max)_
   - Goal: Define OLS model specification and spec validation output
   - Files: `src/analytics_platform/contracts/modeling.py; tests/contracts/test_model_spec_contracts.py`
   - Commit: `Add model spec contracts`
-- [ ] **#34** Model result contracts _(effort: Max)_
+- [x] **#34** Model result contracts _(effort: Max)_
   - Goal: Define fitted model result shape
   - Files: `src/analytics_platform/contracts/modeling.py; tests/contracts/test_model_result_contracts.py`
   - Commit: `Add model result contracts`
-- [ ] **#35** Model diagnostics contracts _(effort: Max)_
+- [x] **#35** Model diagnostics contracts _(effort: Max)_
   - Goal: Define diagnostic section types
   - Files: `src/analytics_platform/contracts/modeling.py; tests/contracts/test_model_diagnostics_contracts.py`
   - Commit: `Add model diagnostics contracts`
-- [ ] **#36** Claim-level contracts _(effort: Max)_
+- [x] **#36** Claim-level contracts _(effort: Max)_
   - Goal: Define evidence grades and causal warning contracts
   - Files: `src/analytics_platform/contracts/validation.py; tests/contracts/test_claim_level_contracts.py`
   - Commit: `Add claim level contracts`
-- [ ] **#37** Model validation contracts _(effort: Max)_
+- [x] **#37** Model validation contracts _(effort: Max)_
   - Goal: Define model validation request/report contracts
   - Files: `src/analytics_platform/contracts/validation.py; tests/contracts/test_model_validation_contracts.py`
   - Commit: `Add model validation contracts`
-- [ ] **#38** Robustness contracts _(effort: Max)_
+- [x] **#38** Robustness contracts _(effort: Max)_
   - Goal: Define robustness and skipped-check contracts
   - Files: `src/analytics_platform/contracts/validation.py; tests/contracts/test_robustness_contracts.py`
   - Commit: `Add robustness contracts`
@@ -316,7 +316,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Prevent circular dependencies
   - Files: `tests/architecture/test_import_boundaries.py; tests/architecture/test_contracts_do_not_import_implementations.py`
   - Commit: `Add import boundary architecture tests`
-- [ ] **#73** Domain/backend/artifact architecture tests _(effort: Max)_
+- [x] **#73** Domain.backend.artifact architecture tests _(effort: Max)_
   - Goal: Prevent hidden orchestration and backend leakage
   - Files: `tests/architecture/test_domain_backend_boundaries.py; tests/architecture/test_artifact_registry_boundaries.py`
   - Commit: `Add backend artifact architecture tests`
