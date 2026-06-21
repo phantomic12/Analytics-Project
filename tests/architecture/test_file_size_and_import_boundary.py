@@ -89,8 +89,10 @@ CONTRACT_MODULES: tuple[str, ...] = (
     "statistics",
     "modeling",
     "validation",
-    # reporting, registry, pipeline
-    # are deferred to later PRs.
+    "reporting",
+    "registry",
+    "pipeline",
+    # All Build Queue v2.1 contract families are now present.
 )
 
 
