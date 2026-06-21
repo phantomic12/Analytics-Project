@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **21 done** · **120 remaining**
+**Totals**: 141 tasks · **27 done** · **114 remaining**
 
 ---
 
@@ -102,23 +102,23 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define content/source fingerprint contracts
   - Files: `src/analytics_platform/contracts/datasets.py; tests/contracts/test_dataset_fingerprint_contracts.py`
   - Commit: `Add dataset fingerprint contracts`
-- [ ] **#21** Lineage contracts _(effort: Max)_
+- [x] **#21** Lineage contracts _(effort: Max)_
   - Goal: Define lineage records and transformation references
   - Files: `src/analytics_platform/contracts/lineage.py; tests/contracts/test_lineage_contracts.py`
   - Commit: `Add lineage contracts`
-- [ ] **#22** Schema contracts _(effort: Max)_
+- [x] **#22** Schema contracts _(effort: Max)_
   - Goal: Define schema inference and validation interfaces
   - Files: `src/analytics_platform/contracts/schemas.py; tests/contracts/test_schema_contracts.py`
   - Commit: `Add schema contracts`
-- [ ] **#23** Semantic contracts _(effort: Max)_
+- [x] **#23** Semantic contracts _(effort: Max)_
   - Goal: Define semantic column typing interfaces
   - Files: `src/analytics_platform/contracts/semantics.py; tests/contracts/test_semantic_contracts.py`
   - Commit: `Add semantic typing contracts`
-- [ ] **#24** Quality contracts _(effort: Max)_
+- [x] **#24** Quality contracts _(effort: Max)_
   - Goal: Define data quality and missingness outputs
   - Files: `src/analytics_platform/contracts/quality.py; tests/contracts/test_quality_contracts.py`
   - Commit: `Add data quality contracts`
-- [ ] **#25** Profiling contracts _(effort: Max)_
+- [x] **#25** Profiling contracts _(effort: Max)_
   - Goal: Define profiles and distribution summaries
   - Files: `src/analytics_platform/contracts/profiling.py; tests/contracts/test_profiling_contracts.py`
   - Commit: `Add profiling contracts`
@@ -328,7 +328,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Enforce modularity limits
   - Files: `tests/architecture/test_file_size_limits.py`
   - Commit: `Add file size architecture test`
-- [ ] **#76** Required modules architecture test _(effort: High)_
+- [x] **#76** Required modules architecture test _(effort: High)_
   - Goal: Ensure planned modules/contracts exist
   - Files: `tests/architecture/test_required_modules_present.py`
   - Commit: `Add required modules architecture test`
