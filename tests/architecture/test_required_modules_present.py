@@ -52,12 +52,12 @@ EXPECTED_MODULES: tuple[tuple[str, int], ...] = (
     ("semantics", 23),
     ("quality", 24),
     ("profiling", 25),
+    ("associations", 26),
+    ("joins", 27),
+    ("features", 28),  # covers Tasks 28-31
     # --- Profile-only MVP checkpoint (Task 108) reached once the above are
     # present. The following modules are deferred to later tasks and are
     # NOT expected to exist yet:
-    #   ("associations", 26),
-    #   ("joins", 27),
-    #   ("features", 28),  # covers Tasks 28-31
     #   ("statistics", 32),
     #   ("modeling", 33),  # covers Tasks 33-35
     #   ("validation", 36),  # covers Tasks 36-38
@@ -101,9 +101,6 @@ class TestRequiredModulesPresent:
         import pkgutil
 
         deferred: set[str] = {
-            "associations",
-            "joins",
-            "features",
             "statistics",
             "modeling",
             "validation",
@@ -252,6 +249,55 @@ REQUIRED_PUBLIC_TYPES: dict[str, tuple[str, ...]] = {
         "FrequencySummary",
         "ConstantColumnWarning",
         "HighCardinalityWarning",
+    ),
+    "associations": (
+        "AssociationCheckSpec",
+        "AssociationCheckRequest",
+        "AssociationCheckReport",
+        "PairwiseAssociationSummary",
+        "CorrelationMethod",
+        "AssociationWarning",
+        "MulticollinearityRiskSummary",
+    ),
+    "joins": (
+        "JoinType",
+        "JoinCardinality",
+        "JoinRiskLevel",
+        "JoinApprovalStatus",
+        "ColumnConflictPolicy",
+        "NullKeyPolicy",
+        "DuplicateKeyPolicy",
+        "JoinKeySpec",
+        "JoinSpec",
+        "JoinValidationRequest",
+        "JoinValidationReport",
+        "JoinExecutionRequest",
+        "JoinExecutionReport",
+        "JoinedDatasetResult",
+    ),
+    "features": (
+        "TargetSpec",
+        "TargetTask",
+        "FeatureSpec",
+        "SplitStrategy",
+        "SplitSpec",
+        "FeatureBuildRequest",
+        "FeatureEligibilityReport",
+        "MissingValueStrategy",
+        "EncodingStrategy",
+        "ScalingStrategy",
+        "PreprocessingFitScope",
+        "FeatureTransformationPlan",
+        "FeatureTransformationReport",
+        "FeatureMatrixRef",
+        "FeatureMatrixResult",
+        "RowsExcludedReport",
+        "ColumnsExcludedReport",
+        "FeatureExclusionReason",
+        "LeakageCheckRequest",
+        "LeakageCheckReport",
+        "LeakageRisk",
+        "LeakageRiskType",
     ),
 }
 

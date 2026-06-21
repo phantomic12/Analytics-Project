@@ -15,34 +15,30 @@ domain implementation module (``core``, ``reporting``, ``pipeline``,
 Build order and family ownership follow ``docs/contracts/contracts-index-v1.1.md``:
 
 - ``common`` (Task 11) - base IDs, status, issues, warnings, metrics,
-  artifacts, and ``StageResult``. Imported from
-  ``analytics_platform.contracts.common``.
+  artifacts, and ``StageResult``.
 - ``execution`` (Tasks 12-14) - backend-neutral execution references,
-  materialization, and limit policies. Imported from
-  ``analytics_platform.contracts.execution``.
+  materialization, and limit policies.
 - ``artifacts`` (Task 15) - durable artifact references and storage
-  policy. Imported from ``analytics_platform.contracts.artifacts``.
+  policy.
 - ``cache`` (Task 16) - cache keys, fingerprints, and invalidation
-  reasons. Imported from ``analytics_platform.contracts.cache``.
-- ``visuals`` (Task 17) - table/chart artifact references. Imported
-  from ``analytics_platform.contracts.visuals``.
+  reasons.
+- ``visuals`` (Task 17) - table/chart artifact references.
 - ``datasets`` (Tasks 18-20) - dataset identity, load, ingestion, and
-  fingerprint contracts. Imported from
-  ``analytics_platform.contracts.datasets``.
+  fingerprint contracts.
 - ``lineage`` (Task 21) - lineage records, references, and graph
-  snapshots. Imported from ``analytics_platform.contracts.lineage``.
-- ``schemas`` (Task 22) - schema inference and validation. Imported
-  from ``analytics_platform.contracts.schemas``.
-- ``semantics`` (Task 23) - semantic column typing. Imported from
-  ``analytics_platform.contracts.semantics``.
-- ``quality`` (Task 24) - data quality and missingness. Imported
-  from ``analytics_platform.contracts.quality``.
-- ``profiling`` (Task 25) - distribution profiles. Imported from
-  ``analytics_platform.contracts.profiling``.
+  snapshots.
+- ``schemas`` (Task 22) - schema inference and validation.
+- ``semantics`` (Task 23) - semantic column typing.
+- ``quality`` (Task 24) - data quality and missingness.
+- ``profiling`` (Task 25) - distribution profiles.
+- ``associations`` (Task 26) - diagnostic association checks.
+- ``joins`` (Task 27) - join validation and execution.
+- ``features`` (Tasks 28-31) - target/feature spec, transformations,
+  matrix ref, and leakage checks.
 
-Later families (associations, joins, features, statistics, modeling,
-validation, reporting, registry, pipeline) are re-exported here only
-once their Build Queue contract tasks land.
+Later families (statistics, modeling, validation, reporting,
+registry, pipeline) are re-exported here only once their Build
+Queue contract tasks land.
 """
 
 from __future__ import annotations
@@ -174,6 +170,55 @@ from analytics_platform.contracts.visuals import (
     TableArtifactRef,
     VisualArtifactSpec,
 )
+from analytics_platform.contracts.associations import (
+    AssociationCheckReport,
+    AssociationCheckRequest,
+    AssociationCheckSpec,
+    AssociationWarning,
+    CorrelationMethod,
+    MulticollinearityRiskSummary,
+    PairwiseAssociationSummary,
+)
+from analytics_platform.contracts.features import (
+    ColumnsExcludedReport,
+    EncodingStrategy,
+    FeatureBuildRequest,
+    FeatureEligibilityReport,
+    FeatureExclusionReason,
+    FeatureMatrixRef,
+    FeatureMatrixResult,
+    FeatureSpec,
+    FeatureTransformationPlan,
+    FeatureTransformationReport,
+    LeakageCheckReport,
+    LeakageCheckRequest,
+    LeakageRisk,
+    LeakageRiskType,
+    MissingValueStrategy,
+    PreprocessingFitScope,
+    RowsExcludedReport,
+    ScalingStrategy,
+    SplitSpec,
+    SplitStrategy,
+    TargetSpec,
+    TargetTask,
+)
+from analytics_platform.contracts.joins import (
+    ColumnConflictPolicy,
+    DuplicateKeyPolicy,
+    JoinApprovalStatus,
+    JoinCardinality,
+    JoinExecutionReport,
+    JoinExecutionRequest,
+    JoinKeySpec,
+    JoinRiskLevel,
+    JoinSpec,
+    JoinType,
+    JoinValidationReport,
+    JoinValidationRequest,
+    JoinedDatasetResult,
+    NullKeyPolicy,
+)
 
 __all__ = [
     # common (Task 11)
@@ -292,4 +337,50 @@ __all__ = [
     "ProfilingRequest",
     "ProfilingSpec",
     "QuantileSummary",
+    # associations (Task 26)
+    "AssociationCheckReport",
+    "AssociationCheckRequest",
+    "AssociationCheckSpec",
+    "AssociationWarning",
+    "CorrelationMethod",
+    "MulticollinearityRiskSummary",
+    "PairwiseAssociationSummary",
+    # joins (Task 27)
+    "ColumnConflictPolicy",
+    "DuplicateKeyPolicy",
+    "JoinApprovalStatus",
+    "JoinCardinality",
+    "JoinExecutionReport",
+    "JoinExecutionRequest",
+    "JoinKeySpec",
+    "JoinRiskLevel",
+    "JoinSpec",
+    "JoinType",
+    "JoinValidationReport",
+    "JoinValidationRequest",
+    "JoinedDatasetResult",
+    "NullKeyPolicy",
+    # features (Tasks 28-31)
+    "ColumnsExcludedReport",
+    "EncodingStrategy",
+    "FeatureBuildRequest",
+    "FeatureEligibilityReport",
+    "FeatureExclusionReason",
+    "FeatureMatrixRef",
+    "FeatureMatrixResult",
+    "FeatureSpec",
+    "FeatureTransformationPlan",
+    "FeatureTransformationReport",
+    "LeakageCheckReport",
+    "LeakageCheckRequest",
+    "LeakageRisk",
+    "LeakageRiskType",
+    "MissingValueStrategy",
+    "PreprocessingFitScope",
+    "RowsExcludedReport",
+    "ScalingStrategy",
+    "SplitSpec",
+    "SplitStrategy",
+    "TargetSpec",
+    "TargetTask",
 ]
