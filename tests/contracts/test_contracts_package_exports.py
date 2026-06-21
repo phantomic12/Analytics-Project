@@ -228,6 +228,35 @@ EXPECTED_PUBLIC_NAMES: tuple[str, ...] = (
     "ValidatedModelInterpretation",
     "ValidationSpec",
     "ValidationStrategy",
+    # reporting (Tasks 39-40)
+    "ReportArtifactSet",
+    "ReportBuildRequest",
+    "ReportClaimSummary",
+    "ReportFormat",
+    "ReportInputBundle",
+    "ReportRenderRequest",
+    "ReportSection",
+    "ReportSectionType",
+    "ReportWarningSummary",
+    # registry (Task 41)
+    "ArtifactRegistryEntry",
+    "DatasetRegistryEntry",
+    "ModelRegistryEntry",
+    "RegistryWriteRequest",
+    "RegistryWriteResult",
+    "ResultRegistryEntry",
+    "RunHistoryQuery",
+    "RunRegistryRecord",
+    "RunStatus",
+    # pipeline (Tasks 42-45)
+    "AnalysisPlan",
+    "AnalysisRunResult",
+    "PipelineExecutionMode",
+    "PipelineFailurePolicy",
+    "PipelineStageName",
+    "PipelineWarningSummary",
+    "RunManifest",
+    "RunManifestRequest",
 )
 
 
@@ -470,6 +499,35 @@ class TestReExportParity:
             "ValidatedModelInterpretation": "analytics_platform.contracts.validation",
             "ValidationSpec": "analytics_platform.contracts.validation",
             "ValidationStrategy": "analytics_platform.contracts.validation",
+            # reporting (Tasks 39-40)
+            "ReportArtifactSet": "analytics_platform.contracts.reporting",
+            "ReportBuildRequest": "analytics_platform.contracts.reporting",
+            "ReportClaimSummary": "analytics_platform.contracts.reporting",
+            "ReportFormat": "analytics_platform.contracts.reporting",
+            "ReportInputBundle": "analytics_platform.contracts.reporting",
+            "ReportRenderRequest": "analytics_platform.contracts.reporting",
+            "ReportSection": "analytics_platform.contracts.reporting",
+            "ReportSectionType": "analytics_platform.contracts.reporting",
+            "ReportWarningSummary": "analytics_platform.contracts.reporting",
+            # registry (Task 41)
+            "ArtifactRegistryEntry": "analytics_platform.contracts.registry",
+            "DatasetRegistryEntry": "analytics_platform.contracts.registry",
+            "ModelRegistryEntry": "analytics_platform.contracts.registry",
+            "RegistryWriteRequest": "analytics_platform.contracts.registry",
+            "RegistryWriteResult": "analytics_platform.contracts.registry",
+            "ResultRegistryEntry": "analytics_platform.contracts.registry",
+            "RunHistoryQuery": "analytics_platform.contracts.registry",
+            "RunRegistryRecord": "analytics_platform.contracts.registry",
+            "RunStatus": "analytics_platform.contracts.registry",
+            # pipeline (Tasks 42-45)
+            "AnalysisPlan": "analytics_platform.contracts.pipeline",
+            "AnalysisRunResult": "analytics_platform.contracts.pipeline",
+            "PipelineExecutionMode": "analytics_platform.contracts.pipeline",
+            "PipelineFailurePolicy": "analytics_platform.contracts.pipeline",
+            "PipelineStageName": "analytics_platform.contracts.pipeline",
+            "PipelineWarningSummary": "analytics_platform.contracts.pipeline",
+            "RunManifest": "analytics_platform.contracts.pipeline",
+            "RunManifestRequest": "analytics_platform.contracts.pipeline",
         }
         module_name = module_for_name[name]
         owning_module = importlib.import_module(module_name)
