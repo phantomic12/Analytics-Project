@@ -25,10 +25,7 @@ class TestEnums:
     def test_correction_methods(self) -> None:
         assert MultipleTestingCorrectionMethod.BONFERRONI.value == "bonferroni"
         assert MultipleTestingCorrectionMethod.HOLM.value == "holm"
-        assert (
-            MultipleTestingCorrectionMethod.BENJAMINI_HOCHBERG.value
-            == "benjamini_hochberg"
-        )
+        assert MultipleTestingCorrectionMethod.BENJAMINI_HOCHBERG.value == "benjamini_hochberg"
 
     def test_test_families(self) -> None:
         assert TestFamily.COEFFICIENT.value == "coefficient"
@@ -72,9 +69,7 @@ class TestEffectEstimate:
 
 class TestPValueAdjustmentResult:
     def test_basic(self) -> None:
-        p = PValueAdjustmentResult(
-            hypothesis_id="h1", raw_p_value=0.01, adjusted_p_value=0.04
-        )
+        p = PValueAdjustmentResult(hypothesis_id="h1", raw_p_value=0.01, adjusted_p_value=0.04)
         assert p.rank is None
 
     def test_rank_must_be_positive(self) -> None:
@@ -88,13 +83,9 @@ class TestPValueAdjustmentResult:
 
     def test_p_value_bounds(self) -> None:
         with pytest.raises(ValidationError):
-            PValueAdjustmentResult(
-                hypothesis_id="h1", raw_p_value=-0.1, adjusted_p_value=0.04
-            )
+            PValueAdjustmentResult(hypothesis_id="h1", raw_p_value=-0.1, adjusted_p_value=0.04)
         with pytest.raises(ValidationError):
-            PValueAdjustmentResult(
-                hypothesis_id="h1", raw_p_value=0.01, adjusted_p_value=1.5
-            )
+            PValueAdjustmentResult(hypothesis_id="h1", raw_p_value=0.01, adjusted_p_value=1.5)
 
 
 class TestStatisticalTestResult:
@@ -233,9 +224,7 @@ class TestMultipleTestingCorrectionReport:
             correction_method=MultipleTestingCorrectionMethod.BONFERRONI,
             alpha=0.05,
         )
-        assert MultipleTestingCorrectionReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert MultipleTestingCorrectionReport.model_validate(r.model_dump(mode="json")) == r
 
 
 def test_statistics_contracts_do_not_import_heavy_libs() -> None:

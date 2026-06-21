@@ -87,7 +87,9 @@ CONTRACT_MODULES: tuple[str, ...] = (
     "joins",
     "features",
     "statistics",
-    # modeling, validation, reporting, registry, pipeline
+    "modeling",
+    "validation",
+    # reporting, registry, pipeline
     # are deferred to later PRs.
 )
 

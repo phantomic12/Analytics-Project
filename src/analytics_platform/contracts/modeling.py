@@ -197,9 +197,7 @@ class OLSModelSpec(_ModelingContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    target_column: ColumnName = Field(
-        ..., description="ColumnName of the target column."
-    )
+    target_column: ColumnName = Field(..., description="ColumnName of the target column.")
     predictor_columns: tuple[ColumnName, ...] = Field(
         ...,
         min_length=1,
@@ -219,8 +217,7 @@ class OLSModelSpec(_ModelingContractModel):
     def _target_not_in_predictors(self) -> "OLSModelSpec":
         if self.target_column in self.predictor_columns:
             raise ValueError(
-                "OLSModelSpec.target_column must not also appear in "
-                "predictor_columns."
+                "OLSModelSpec.target_column must not also appear in predictor_columns."
             )
         return self
 
@@ -279,13 +276,9 @@ class ModelSpec(_ModelingContractModel):
     @model_validator(mode="after")
     def _ols_spec_consistent_with_model_type(self) -> "ModelSpec":
         if self.model_type is ModelType.OLS and self.ols_spec is None:
-            raise ValueError(
-                "ModelSpec with model_type=OLS must include an ols_spec."
-            )
+            raise ValueError("ModelSpec with model_type=OLS must include an ols_spec.")
         if self.model_type is not ModelType.OLS and self.ols_spec is not None:
-            raise ValueError(
-                "ModelSpec.ols_spec is only valid when model_type=OLS."
-            )
+            raise ValueError("ModelSpec.ols_spec is only valid when model_type=OLS.")
         return self
 
 
@@ -391,9 +384,7 @@ class ModelSpecValidationReport(_ModelingContractModel):
         seen: set[str] = set()
         for code, _message in self.block_reasons:
             if not code:
-                raise ValueError(
-                    "ModelSpecValidationReport.block_reasons codes must be non-empty."
-                )
+                raise ValueError("ModelSpecValidationReport.block_reasons codes must be non-empty.")
             if code in seen:
                 raise ValueError(
                     f"ModelSpecValidationReport.block_reasons has duplicate code: {code!r}."
@@ -562,9 +553,7 @@ class CoefficientTable(_ModelingContractModel):
         seen: set[str] = set()
         for c in self.coefficients:
             if c.name in seen:
-                raise ValueError(
-                    f"CoefficientTable has duplicate coefficient name: {c.name!r}."
-                )
+                raise ValueError(f"CoefficientTable has duplicate coefficient name: {c.name!r}.")
             seen.add(c.name)
         return self
 
@@ -602,9 +591,7 @@ class ModelMetricSet(_ModelingContractModel):
         seen: set[str] = set()
         for m in self.metrics:
             if m.name in seen:
-                raise ValueError(
-                    f"ModelMetricSet has duplicate metric name: {m.name!r}."
-                )
+                raise ValueError(f"ModelMetricSet has duplicate metric name: {m.name!r}.")
             seen.add(m.name)
         return self
 
@@ -625,15 +612,11 @@ class ModelFitSummary(_ModelingContractModel):
     - ``aic`` / ``bic``: optional information criteria.
     """
 
-    r_squared: float | None = Field(
-        default=None, description="Optional real-number R^2."
-    )
+    r_squared: float | None = Field(default=None, description="Optional real-number R^2.")
     adjusted_r_squared: float | None = Field(
         default=None, description="Optional real-number adjusted R^2."
     )
-    f_statistic: float | None = Field(
-        default=None, description="Optional F-statistic."
-    )
+    f_statistic: float | None = Field(default=None, description="Optional F-statistic.")
     f_p_value: float | None = Field(
         default=None,
         ge=0.0,
@@ -650,12 +633,8 @@ class ModelFitSummary(_ModelingContractModel):
         ge=0.0,
         description="Optional non-negative residual degrees of freedom.",
     )
-    aic: float | None = Field(
-        default=None, description="Optional Akaike Information Criterion."
-    )
-    bic: float | None = Field(
-        default=None, description="Optional Bayesian Information Criterion."
-    )
+    aic: float | None = Field(default=None, description="Optional Akaike Information Criterion.")
+    bic: float | None = Field(default=None, description="Optional Bayesian Information Criterion.")
 
 
 class ModelResult(_ModelingContractModel):
@@ -683,9 +662,7 @@ class ModelResult(_ModelingContractModel):
     - ``metadata``: small bounded string-to-string metadata.
     """
 
-    model_id: ModelId = Field(
-        ..., description="ModelId of the model that was fit."
-    )
+    model_id: ModelId = Field(..., description="ModelId of the model that was fit.")
     coefficient_table: CoefficientTable = Field(
         ..., description="CoefficientTable of fitted coefficients."
     )
@@ -724,18 +701,14 @@ class ModelResult(_ModelingContractModel):
             if ms.scope is None:
                 continue
             if ms.scope in seen:
-                raise ValueError(
-                    f"ModelResult.metric_sets has duplicate scope: {ms.scope!r}."
-                )
+                raise ValueError(f"ModelResult.metric_sets has duplicate scope: {ms.scope!r}.")
             seen.add(ms.scope)
         return self
 
     @model_validator(mode="after")
     def _fit_at_is_timezone_aware(self) -> "ModelResult":
         if self.fit_at is not None and self.fit_at.tzinfo is None:
-            object.__setattr__(
-                self, "fit_at", self.fit_at.replace(tzinfo=timezone.utc)
-            )
+            object.__setattr__(self, "fit_at", self.fit_at.replace(tzinfo=timezone.utc))
         return self
 
 
@@ -795,10 +768,7 @@ class ModelAssumptionDiagnostics(_ModelingContractModel):
     )
     any_severe_violation: bool = Field(
         default=False,
-        description=(
-            "When True, at least one check had ERROR/CRITICAL severity and "
-            "did not pass."
-        ),
+        description=("When True, at least one check had ERROR/CRITICAL severity and did not pass."),
     )
 
     @model_validator(mode="after")
@@ -815,8 +785,7 @@ class ModelAssumptionDiagnostics(_ModelingContractModel):
     @model_validator(mode="after")
     def _severe_violation_consistent(self) -> "ModelAssumptionDiagnostics":
         computed = any(
-            (not c.passed)
-            and c.severity in (Severity.ERROR, Severity.CRITICAL)
+            (not c.passed) and c.severity in (Severity.ERROR, Severity.CRITICAL)
             for c in self.checks
         )
         if self.any_severe_violation and not computed:
@@ -949,8 +918,7 @@ class ModelStabilityDiagnostics(_ModelingContractModel):
     @model_validator(mode="after")
     def _severe_overfitting_consistent(self) -> "ModelStabilityDiagnostics":
         computed = any(
-            (not c.passed)
-            and c.severity in (Severity.ERROR, Severity.CRITICAL)
+            (not c.passed) and c.severity in (Severity.ERROR, Severity.CRITICAL)
             for c in self.overfitting_checks
         )
         if self.any_severe_overfitting and not computed:
@@ -1031,21 +999,13 @@ class ModelDiagnosticReport(_ModelingContractModel):
     - ``metadata``: small bounded string-to-string metadata.
     """
 
-    model_id: ModelId = Field(
-        ..., description="ModelId of the model that was diagnosed."
-    )
+    model_id: ModelId = Field(..., description="ModelId of the model that was diagnosed.")
     fit_summary: ModelFitSummary | None = Field(
         default=None, description="Optional ModelFitSummary."
     )
-    assumptions: ModelAssumptionDiagnostics = Field(
-        ..., description="ModelAssumptionDiagnostics."
-    )
-    data_diagnostics: ModelDataDiagnostics = Field(
-        ..., description="ModelDataDiagnostics."
-    )
-    stability: ModelStabilityDiagnostics = Field(
-        ..., description="ModelStabilityDiagnostics."
-    )
+    assumptions: ModelAssumptionDiagnostics = Field(..., description="ModelAssumptionDiagnostics.")
+    data_diagnostics: ModelDataDiagnostics = Field(..., description="ModelDataDiagnostics.")
+    stability: ModelStabilityDiagnostics = Field(..., description="ModelStabilityDiagnostics.")
     interpretation_limits: tuple[ModelInterpretationLimit, ...] = Field(
         default=(),
         description="Tuple of ModelInterpretationLimit (immutable).",

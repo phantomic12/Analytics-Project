@@ -152,14 +152,8 @@ class ConfidenceInterval(_StatisticsContractModel):
 
     @model_validator(mode="after")
     def _lower_le_upper(self) -> "ConfidenceInterval":
-        if (
-            self.lower is not None
-            and self.upper is not None
-            and self.upper < self.lower
-        ):
-            raise ValueError(
-                "ConfidenceInterval.upper must be >= lower."
-            )
+        if self.lower is not None and self.upper is not None and self.upper < self.lower:
+            raise ValueError("ConfidenceInterval.upper must be >= lower.")
         return self
 
 
@@ -271,9 +265,7 @@ class StatisticalTestResult(_StatisticsContractModel):
         max_length=256,
         description="Stable identifier of the test.",
     )
-    family: TestFamily = Field(
-        ..., description="TestFamily the test belongs to."
-    )
+    family: TestFamily = Field(..., description="TestFamily the test belongs to.")
     statistic: float = Field(..., description="Real-number test statistic.")
     p_value: _BoundedPValue = Field(
         ...,
@@ -391,13 +383,9 @@ class MultipleTestingCorrectionReport(_StatisticsContractModel):
             )
         if not self.skipped and self.skip_reason:
             raise ValueError(
-                "MultipleTestingCorrectionReport with skipped=False must "
-                "not include a skip_reason."
+                "MultipleTestingCorrectionReport with skipped=False must not include a skip_reason."
             )
-        if (
-            self.correction_method is MultipleTestingCorrectionMethod.NONE
-            and not self.skipped
-        ):
+        if self.correction_method is MultipleTestingCorrectionMethod.NONE and not self.skipped:
             raise ValueError(
                 "MultipleTestingCorrectionReport with correction_method=NONE "
                 "must have skipped=True."
@@ -411,9 +399,7 @@ class MultipleTestingCorrectionReport(_StatisticsContractModel):
             and self.n_tests is not None
             and self.n_rejected > self.n_tests
         ):
-            raise ValueError(
-                "MultipleTestingCorrectionReport.n_rejected must not exceed n_tests."
-            )
+            raise ValueError("MultipleTestingCorrectionReport.n_rejected must not exceed n_tests.")
         return self
 
     @model_validator(mode="after")

@@ -71,9 +71,7 @@ def _handle() -> DatasetHandle:
 def _limits() -> ExecutionLimitPolicy:
     return ExecutionLimitPolicy(
         collect=CollectPolicy(mode=CollectMode.FORBIDDEN),
-        pandas_conversion=PandasConversionPolicy(
-            mode=PandasConversionMode.FORBIDDEN
-        ),
+        pandas_conversion=PandasConversionPolicy(mode=PandasConversionMode.FORBIDDEN),
         memory_budget=MemoryBudgetPolicy(max_bytes=2_000_000_000),
     )
 
@@ -275,9 +273,7 @@ class TestValidationSpec:
 
     def test_max_allowed_claim_level_quasi_causal_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ValidationSpec(
-                max_allowed_claim_level=ClaimLevel.QUASI_CAUSAL
-            )
+            ValidationSpec(max_allowed_claim_level=ClaimLevel.QUASI_CAUSAL)
 
     def test_downgrade_allowed(self) -> None:
         s = ValidationSpec(causal_claim_policy=CausalClaimPolicy.DOWNGRADE)
@@ -330,9 +326,7 @@ class TestModelValidationRequest:
                 ),
             ),
             skipped_robustness_checks=(
-                SkippedRobustnessCheck(
-                    check_name="other", reason="not configured"
-                ),
+                SkippedRobustnessCheck(check_name="other", reason="not configured"),
             ),
         )
         assert len(r.robustness_checks) == 1
@@ -501,12 +495,8 @@ class TestModelValidationReport:
         assert len(r.causal_warnings) == 1
 
     def test_round_trip(self) -> None:
-        r = ModelValidationReport(
-            request=_validation_request(), overall_passed=True
-        )
-        assert ModelValidationReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        r = ModelValidationReport(request=_validation_request(), overall_passed=True)
+        assert ModelValidationReport.model_validate(r.model_dump(mode="json")) == r
 
 
 def test_validation_contracts_do_not_import_heavy_libs() -> None:

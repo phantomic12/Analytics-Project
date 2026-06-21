@@ -385,9 +385,7 @@ class RobustnessCheckResult(_ValidationContractModel):
         default=None,
         description="Optional real-number metric observed.",
     )
-    threshold: float | None = Field(
-        default=None, description="Optional real-number threshold."
-    )
+    threshold: float | None = Field(default=None, description="Optional real-number threshold.")
     severity: Severity = Field(..., description="Severity of the result.")
     message: str = Field(..., min_length=1, description="Human-readable message.")
 
@@ -540,8 +538,7 @@ class ModelValidationRequest(_ValidationContractModel):
     def _result_model_id_matches(self) -> "ModelValidationRequest":
         if self.result.model_id != self.model_id:
             raise ValueError(
-                "ModelValidationRequest.result.model_id must equal "
-                "ModelValidationRequest.model_id."
+                "ModelValidationRequest.result.model_id must equal ModelValidationRequest.model_id."
             )
         if self.diagnostics.model_id != self.model_id:
             raise ValueError(

@@ -64,9 +64,7 @@ def _handle() -> DatasetHandle:
 def _limits() -> ExecutionLimitPolicy:
     return ExecutionLimitPolicy(
         collect=CollectPolicy(mode=CollectMode.FORBIDDEN),
-        pandas_conversion=PandasConversionPolicy(
-            mode=PandasConversionMode.FORBIDDEN
-        ),
+        pandas_conversion=PandasConversionPolicy(mode=PandasConversionMode.FORBIDDEN),
         memory_budget=MemoryBudgetPolicy(max_bytes=2_000_000_000),
     )
 
@@ -252,17 +250,13 @@ class TestModelSpecValidationReport:
             passed=False,
             block_reasons=(("X", "y"),),
             issues=(Issue(code="I", severity=Severity.WARNING, message="m"),),
-            warnings_records=(
-                WarningRecord(code="W", message="m"),
-            ),
+            warnings_records=(WarningRecord(code="W", message="m"),),
         )
         assert len(r2.issues) == 1
 
     def test_round_trip(self) -> None:
         r = _passed_validation()
-        assert ModelSpecValidationReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert ModelSpecValidationReport.model_validate(r.model_dump(mode="json")) == r
 
 
 # ---------------------------------------------------------------------------
@@ -455,9 +449,7 @@ class TestModelAssumptionDiagnostics:
     def test_any_severe_violation_true(self) -> None:
         d = ModelAssumptionDiagnostics(
             checks=(
-                AssumptionCheckResult(
-                    name="n", passed=False, severity=Severity.ERROR, message="m"
-                ),
+                AssumptionCheckResult(name="n", passed=False, severity=Severity.ERROR, message="m"),
             ),
             any_severe_violation=True,
         )
@@ -560,9 +552,7 @@ class TestModelStabilityDiagnostics:
 
 class TestModelInterpretationLimit:
     def test_basic(self) -> None:
-        l = ModelInterpretationLimit(
-            code="X", severity=Severity.WARNING, message="m"
-        )
+        l = ModelInterpretationLimit(code="X", severity=Severity.WARNING, message="m")
         assert l.downgrades_coefficient_interpretation is False
 
 
@@ -641,9 +631,7 @@ class TestModelDiagnosticReport:
             data_diagnostics=ModelDataDiagnostics(),
             stability=ModelStabilityDiagnostics(),
         )
-        assert ModelDiagnosticReport.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert ModelDiagnosticReport.model_validate(r.model_dump(mode="json")) == r
 
 
 def test_modeling_contracts_do_not_import_heavy_libs() -> None:
