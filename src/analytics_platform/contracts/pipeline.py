@@ -247,8 +247,7 @@ class AnalysisPlan(_PipelineContractModel):
             self.datasets
         ):
             raise ValueError(
-                "AnalysisPlan.target_dataset_index must be within range of "
-                "the datasets tuple."
+                "AnalysisPlan.target_dataset_index must be within range of the datasets tuple."
             )
         return self
 
@@ -257,9 +256,7 @@ class AnalysisPlan(_PipelineContractModel):
         seen: set[PipelineStageName] = set()
         for stage in self.stages:
             if stage in seen:
-                raise ValueError(
-                    f"AnalysisPlan.stages has duplicate stage: {stage!r}."
-                )
+                raise ValueError(f"AnalysisPlan.stages has duplicate stage: {stage!r}.")
             seen.add(stage)
         return self
 
@@ -345,9 +342,7 @@ class RunManifest(_PipelineContractModel):
         description="Stable identifier.",
     )
     run_id: RunId = Field(..., description="RunId of the run.")
-    plan: AnalysisPlan = Field(
-        ..., description="AnalysisPlan that was executed."
-    )
+    plan: AnalysisPlan = Field(..., description="AnalysisPlan that was executed.")
     config_hash: str | None = Field(
         default=None,
         min_length=1,
@@ -423,9 +418,7 @@ class RunManifest(_PipelineContractModel):
         for field_name in ("started_at", "finished_at"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=timezone.utc))
         return self
 
     @model_validator(mode="after")
@@ -435,9 +428,7 @@ class RunManifest(_PipelineContractModel):
             and self.finished_at is not None
             and self.finished_at < self.started_at
         ):
-            raise ValueError(
-                "RunManifest.finished_at must be >= started_at."
-            )
+            raise ValueError("RunManifest.finished_at must be >= started_at.")
         return self
 
 
@@ -490,9 +481,7 @@ class PipelineWarningSummary(_PipelineContractModel):
         seen: set[Severity] = set()
         for severity, _count in self.warnings_by_severity:
             if severity in seen:
-                raise ValueError(
-                    f"PipelineWarningSummary has duplicate severity: {severity!r}."
-                )
+                raise ValueError(f"PipelineWarningSummary has duplicate severity: {severity!r}.")
             seen.add(severity)
         return self
 
@@ -501,8 +490,7 @@ class PipelineWarningSummary(_PipelineContractModel):
         for _severity, count in self.warnings_by_severity:
             if count < 0:
                 raise ValueError(
-                    "PipelineWarningSummary warnings_by_severity counts must "
-                    "be non-negative."
+                    "PipelineWarningSummary warnings_by_severity counts must be non-negative."
                 )
         return self
 
@@ -540,9 +528,7 @@ class AnalysisRunResult(_PipelineContractModel):
 
     run_id: RunId = Field(..., description="RunId of the run.")
     status: RunStatus = Field(..., description="RunStatus of the run.")
-    plan: AnalysisPlan = Field(
-        ..., description="AnalysisPlan that was executed."
-    )
+    plan: AnalysisPlan = Field(..., description="AnalysisPlan that was executed.")
     manifest: RunManifest | None = Field(
         default=None,
         description="Optional RunManifest.",
@@ -594,13 +580,9 @@ class AnalysisRunResult(_PipelineContractModel):
 
     @model_validator(mode="after")
     def _registry_write_run_id_matches(self) -> "AnalysisRunResult":
-        if (
-            self.registry_write is not None
-            and self.registry_write.run_id != self.run_id
-        ):
+        if self.registry_write is not None and self.registry_write.run_id != self.run_id:
             raise ValueError(
-                "AnalysisRunResult.registry_write.run_id must equal "
-                "AnalysisRunResult.run_id."
+                "AnalysisRunResult.registry_write.run_id must equal AnalysisRunResult.run_id."
             )
         return self
 
@@ -619,9 +601,7 @@ class AnalysisRunResult(_PipelineContractModel):
         for field_name in ("started_at", "finished_at"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=timezone.utc))
         return self
 
     @model_validator(mode="after")
@@ -631,9 +611,7 @@ class AnalysisRunResult(_PipelineContractModel):
             and self.finished_at is not None
             and self.finished_at < self.started_at
         ):
-            raise ValueError(
-                "AnalysisRunResult.finished_at must be >= started_at."
-            )
+            raise ValueError("AnalysisRunResult.finished_at must be >= started_at.")
         return self
 
     @model_validator(mode="after")
@@ -641,8 +619,6 @@ class AnalysisRunResult(_PipelineContractModel):
         seen: set[str] = set()
         for rid in self.report_ids:
             if rid in seen:
-                raise ValueError(
-                    f"AnalysisRunResult.report_ids has duplicate report_id: {rid!r}."
-                )
+                raise ValueError(f"AnalysisRunResult.report_ids has duplicate report_id: {rid!r}.")
             seen.add(rid)
         return self

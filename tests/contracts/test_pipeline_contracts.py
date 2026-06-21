@@ -50,10 +50,7 @@ class TestEnums:
         assert PipelineStageName.CONFIG_LOAD.value == "config_load"
         assert PipelineStageName.DATASET_LOAD.value == "dataset_load"
         assert PipelineStageName.OLS_FIT.value == "ols_fit"
-        assert (
-            PipelineStageName.FILE_BASED_REGISTRY_WRITING.value
-            == "file_based_registry_writing"
-        )
+        assert PipelineStageName.FILE_BASED_REGISTRY_WRITING.value == "file_based_registry_writing"
 
     def test_execution_modes(self) -> None:
         assert PipelineExecutionMode.NORMAL.value == "normal"
@@ -62,13 +59,8 @@ class TestEnums:
         assert PipelineExecutionMode.PROFILE_ONLY.value == "profile_only"
 
     def test_failure_policies(self) -> None:
-        assert (
-            PipelineFailurePolicy.FAIL_FAST.value == "fail_fast"
-        )
-        assert (
-            PipelineFailurePolicy.CONTINUE_WITH_WARNINGS.value
-            == "continue_with_warnings"
-        )
+        assert PipelineFailurePolicy.FAIL_FAST.value == "fail_fast"
+        assert PipelineFailurePolicy.CONTINUE_WITH_WARNINGS.value == "continue_with_warnings"
 
 
 # ---------------------------------------------------------------------------
@@ -239,9 +231,7 @@ class TestPipelineWarningSummary:
 
     def test_round_trip(self) -> None:
         s = PipelineWarningSummary(total_warning_count=5)
-        assert PipelineWarningSummary.model_validate(
-            s.model_dump(mode="json")
-        ) == s
+        assert PipelineWarningSummary.model_validate(s.model_dump(mode="json")) == s
 
 
 # ---------------------------------------------------------------------------
@@ -249,9 +239,7 @@ class TestPipelineWarningSummary:
 # ---------------------------------------------------------------------------
 class TestAnalysisRunResult:
     def _result(self) -> AnalysisRunResult:
-        return AnalysisRunResult(
-            run_id="r1", status=RunStatus.SUCCEEDED, plan=_plan()
-        )
+        return AnalysisRunResult(run_id="r1", status=RunStatus.SUCCEEDED, plan=_plan())
 
     def test_basic(self) -> None:
         r = self._result()
@@ -262,9 +250,7 @@ class TestAnalysisRunResult:
             run_id="r1",
             status=RunStatus.SUCCEEDED,
             plan=_plan(),
-            manifest=RunManifest(
-                manifest_id="m1", run_id="r1", plan=_plan()
-            ),
+            manifest=RunManifest(manifest_id="m1", run_id="r1", plan=_plan()),
         )
         assert r.manifest is not None
 
@@ -274,9 +260,7 @@ class TestAnalysisRunResult:
                 run_id="r1",
                 status=RunStatus.SUCCEEDED,
                 plan=_plan(),
-                registry_write=RegistryWriteResult(
-                    run_id="r2", wrote_run_record=True
-                ),
+                registry_write=RegistryWriteResult(run_id="r2", wrote_run_record=True),
             )
 
     def test_with_registry_write_match(self) -> None:
@@ -284,9 +268,7 @@ class TestAnalysisRunResult:
             run_id="r1",
             status=RunStatus.SUCCEEDED,
             plan=_plan(),
-            registry_write=RegistryWriteResult(
-                run_id="r1", wrote_run_record=True
-            ),
+            registry_write=RegistryWriteResult(run_id="r1", wrote_run_record=True),
         )
         assert r.registry_write is not None
 
@@ -331,9 +313,7 @@ class TestAnalysisRunResult:
 
     def test_round_trip(self) -> None:
         r = self._result()
-        assert AnalysisRunResult.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert AnalysisRunResult.model_validate(r.model_dump(mode="json")) == r
 
 
 def test_pipeline_contracts_do_not_import_heavy_libs() -> None:

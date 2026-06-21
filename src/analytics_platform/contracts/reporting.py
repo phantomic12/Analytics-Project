@@ -174,9 +174,7 @@ class ReportSection(_ReportingContractModel):
         max_length=256,
         description="Stable identifier.",
     )
-    section_type: ReportSectionType = Field(
-        ..., description="ReportSectionType."
-    )
+    section_type: ReportSectionType = Field(..., description="ReportSectionType.")
     title: str = Field(
         ...,
         min_length=1,

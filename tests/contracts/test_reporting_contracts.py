@@ -294,9 +294,7 @@ class TestReportArtifactSet:
             output_format=ReportFormat.MARKDOWN,
             sections=(_section("s1"),),
             table_refs=(_table_ref("a1"),),
-            claim_summary=ReportClaimSummary(
-                claim_level=ClaimLevel.EXPLANATORY
-            ),
+            claim_summary=ReportClaimSummary(claim_level=ClaimLevel.EXPLANATORY),
             warning_summary=ReportWarningSummary(total_warning_count=0),
         )
         assert len(r.sections) == 1
@@ -340,9 +338,7 @@ class TestReportArtifactSet:
             render_id="r1",
             output_format=ReportFormat.MARKDOWN,
         )
-        assert ReportArtifactSet.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert ReportArtifactSet.model_validate(r.model_dump(mode="json")) == r
 
 
 def test_reporting_contracts_do_not_import_heavy_libs() -> None:

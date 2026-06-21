@@ -200,9 +200,7 @@ class RunRegistryRecord(_RegistryContractModel):
         seen: set[str] = set()
         for stage_id in self.stage_ids:
             if stage_id in seen:
-                raise ValueError(
-                    f"RunRegistryRecord has duplicate stage_id: {stage_id!r}."
-                )
+                raise ValueError(f"RunRegistryRecord has duplicate stage_id: {stage_id!r}.")
             seen.add(stage_id)
         return self
 
@@ -211,9 +209,7 @@ class RunRegistryRecord(_RegistryContractModel):
         for field_name in ("started_at", "finished_at", "registered_at"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=timezone.utc))
         return self
 
     @model_validator(mode="after")
@@ -223,9 +219,7 @@ class RunRegistryRecord(_RegistryContractModel):
             and self.finished_at is not None
             and self.finished_at < self.started_at
         ):
-            raise ValueError(
-                "RunRegistryRecord.finished_at must be >= started_at."
-            )
+            raise ValueError("RunRegistryRecord.finished_at must be >= started_at.")
         return self
 
 
@@ -325,9 +319,7 @@ class ModelRegistryEntry(_RegistryContractModel):
         ...,
         description="RunId of the run that produced the model.",
     )
-    model_spec: ModelSpec = Field(
-        ..., description="ModelSpec of the registered model."
-    )
+    model_spec: ModelSpec = Field(..., description="ModelSpec of the registered model.")
     model_result: ModelResult | None = Field(
         default=None,
         description="Optional ModelResult.",
@@ -351,8 +343,7 @@ class ModelRegistryEntry(_RegistryContractModel):
     def _model_ids_match(self) -> "ModelRegistryEntry":
         if self.model_result is not None and self.model_result.model_id != self.model_id:
             raise ValueError(
-                "ModelRegistryEntry.model_result.model_id must equal "
-                "ModelRegistryEntry.model_id."
+                "ModelRegistryEntry.model_result.model_id must equal ModelRegistryEntry.model_id."
             )
         return self
 
@@ -390,9 +381,7 @@ class DatasetRegistryEntry(_RegistryContractModel):
         max_length=256,
         description="Stable identifier.",
     )
-    dataset_id: DatasetId = Field(
-        ..., description="DatasetId of the registered dataset."
-    )
+    dataset_id: DatasetId = Field(..., description="DatasetId of the registered dataset.")
     dataset_handle: DatasetHandle = Field(
         ...,
         description="DatasetHandle of the registered dataset.",
@@ -534,9 +523,7 @@ class RegistryWriteRequest(_RegistryContractModel):
     - ``metadata``: small bounded string-to-string metadata.
     """
 
-    run_record: RunRegistryRecord = Field(
-        ..., description="RunRegistryRecord to write."
-    )
+    run_record: RunRegistryRecord = Field(..., description="RunRegistryRecord to write.")
     result_entries: tuple[ResultRegistryEntry, ...] = Field(
         default=(),
         description="Optional tuple of ResultRegistryEntry.",
@@ -603,9 +590,7 @@ class RegistryWriteResult(_RegistryContractModel):
     """
 
     run_id: RunId = Field(..., description="RunId of the run that was written.")
-    wrote_run_record: bool = Field(
-        ..., description="Whether the run record was written."
-    )
+    wrote_run_record: bool = Field(..., description="Whether the run record was written.")
     result_entry_count: int | None = Field(
         default=None,
         ge=0,
@@ -698,14 +683,8 @@ class RunHistoryQuery(_RegistryContractModel):
 
     @model_validator(mode="after")
     def _since_le_until(self) -> "RunHistoryQuery":
-        if (
-            self.since is not None
-            and self.until is not None
-            and self.until < self.since
-        ):
-            raise ValueError(
-                "RunHistoryQuery.until must be >= since."
-            )
+        if self.since is not None and self.until is not None and self.until < self.since:
+            raise ValueError("RunHistoryQuery.until must be >= since.")
         return self
 
     @model_validator(mode="after")
@@ -713,7 +692,5 @@ class RunHistoryQuery(_RegistryContractModel):
         for field_name in ("since", "until"):
             value = getattr(self, field_name)
             if value is not None and value.tzinfo is None:
-                object.__setattr__(
-                    self, field_name, value.replace(tzinfo=timezone.utc)
-                )
+                object.__setattr__(self, field_name, value.replace(tzinfo=timezone.utc))
         return self

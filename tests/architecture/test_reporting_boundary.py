@@ -84,17 +84,13 @@ class TestReportingBoundary:
             return
         parts = module_name.split(".")
         if len(parts) < 3:
-            offenders.append(
-                f"{file_name}: {kind} {module_name!r} (not an allowed contract root)"
-            )
+            offenders.append(f"{file_name}: {kind} {module_name!r} (not an allowed contract root)")
             return
         subpackage = parts[1]
         if subpackage == "contracts":
             return
         if subpackage in self.DOMAIN_SUBPACKAGES:
-            offenders.append(
-                f"{file_name}: {kind} {module_name!r} (forbidden domain subpackage)"
-            )
+            offenders.append(f"{file_name}: {kind} {module_name!r} (forbidden domain subpackage)")
         else:
             offenders.append(
                 f"{file_name}: {kind} {module_name!r} (unknown analytics_platform subpackage)"
@@ -107,6 +103,4 @@ class TestReportingBoundary:
 
         heavy = {"polars", "pandas", "duckdb", "numpy", "scipy", "statsmodels"}
         leaked = heavy.intersection(sys.modules)
-        assert not leaked, (
-            f"heavy libs imported by reporting contracts: {leaked}"
-        )
+        assert not leaked, f"heavy libs imported by reporting contracts: {leaked}"

@@ -58,12 +58,11 @@ EXPECTED_MODULES: tuple[tuple[str, int], ...] = (
     ("statistics", 32),
     ("modeling", 33),  # covers Tasks 33-35
     ("validation", 36),  # covers Tasks 36-38
-    # --- Profile-only MVP checkpoint (Task 108) reached once the above are
-    # present. The following modules are deferred to later tasks and are
-    # NOT expected to exist yet:
-    #   ("reporting", 39),  # covers Tasks 39-40
-    #   ("registry", 41),
-    #   ("pipeline", 42),  # covers Tasks 42-45
+    ("reporting", 39),  # covers Tasks 39-40
+    ("registry", 41),
+    ("pipeline", 42),  # covers Tasks 42-45
+    # All Build Queue v2.1 contract families are now present. The
+    # next batches are implementation (Tasks 77+).
 )
 
 
@@ -100,11 +99,7 @@ class TestRequiredModulesPresent:
         """
         import pkgutil
 
-        deferred: set[str] = {
-            "reporting",
-            "registry",
-            "pipeline",
-        }
+        deferred: set[str] = set()  # All contract families present.
         expected = {name for name, _ in EXPECTED_MODULES}
         unexpected: list[str] = []
         for module_info in pkgutil.iter_modules(contracts_pkg.__path__):
@@ -343,6 +338,38 @@ REQUIRED_PUBLIC_TYPES: dict[str, tuple[str, ...]] = {
         "ModelValidationReport",
         "ValidatedModelInterpretation",
         "RejectedModelInterpretation",
+    ),
+    "reporting": (
+        "ReportFormat",
+        "ReportSectionType",
+        "ReportSection",
+        "ReportInputBundle",
+        "ReportBuildRequest",
+        "ReportRenderRequest",
+        "ReportArtifactSet",
+        "ReportWarningSummary",
+        "ReportClaimSummary",
+    ),
+    "registry": (
+        "RunStatus",
+        "RunRegistryRecord",
+        "ResultRegistryEntry",
+        "ModelRegistryEntry",
+        "DatasetRegistryEntry",
+        "ArtifactRegistryEntry",
+        "RegistryWriteRequest",
+        "RegistryWriteResult",
+        "RunHistoryQuery",
+    ),
+    "pipeline": (
+        "PipelineStageName",
+        "PipelineExecutionMode",
+        "PipelineFailurePolicy",
+        "AnalysisPlan",
+        "RunManifestRequest",
+        "RunManifest",
+        "PipelineWarningSummary",
+        "AnalysisRunResult",
     ),
 }
 

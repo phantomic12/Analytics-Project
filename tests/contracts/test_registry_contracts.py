@@ -134,15 +134,11 @@ class TestRunRegistryRecord:
 
     def test_progress_above_one_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            RunRegistryRecord(
-                run_id="r1", status=RunStatus.SUCCEEDED, progress=1.5
-            )
+            RunRegistryRecord(run_id="r1", status=RunStatus.SUCCEEDED, progress=1.5)
 
     def test_round_trip(self) -> None:
         r = RunRegistryRecord(run_id="r1", status=RunStatus.SUCCEEDED)
-        assert RunRegistryRecord.model_validate(
-            r.model_dump(mode="json")
-        ) == r
+        assert RunRegistryRecord.model_validate(r.model_dump(mode="json")) == r
 
 
 # ---------------------------------------------------------------------------
@@ -165,9 +161,7 @@ class TestResultRegistryEntry:
             result_kind="x",
             result_id="y",
         )
-        assert ResultRegistryEntry.model_validate(
-            e.model_dump(mode="json")
-        ) == e
+        assert ResultRegistryEntry.model_validate(e.model_dump(mode="json")) == e
 
 
 # ---------------------------------------------------------------------------
@@ -200,9 +194,7 @@ class TestModelRegistryEntry:
                 model_id="m1",
                 run_id="r1",
                 model_spec=_model_spec(),
-                model_result=ModelResult(
-                    model_id="m2", coefficient_table=CoefficientTable()
-                ),
+                model_result=ModelResult(model_id="m2", coefficient_table=CoefficientTable()),
             )
 
     def test_naive_registered_at_normalized(self) -> None:
@@ -235,9 +227,7 @@ class TestDatasetRegistryEntry:
             DatasetRegistryEntry(
                 entry_id="e1",
                 dataset_id="d1",
-                dataset_handle=DatasetHandle(
-                    dataset_id="d2", dataset_ref="ds-d2", name="x"
-                ),
+                dataset_handle=DatasetHandle(dataset_id="d2", dataset_ref="ds-d2", name="x"),
                 run_id="r1",
             )
 
@@ -263,17 +253,13 @@ class TestArtifactRegistryEntry:
 class TestRegistryWrite:
     def test_request(self) -> None:
         r = RegistryWriteRequest(
-            run_record=RunRegistryRecord(
-                run_id="r1", status=RunStatus.SUCCEEDED
-            ),
+            run_record=RunRegistryRecord(run_id="r1", status=RunStatus.SUCCEEDED),
         )
         assert r.overwrite is False
 
     def test_request_with_entries(self) -> None:
         r = RegistryWriteRequest(
-            run_record=RunRegistryRecord(
-                run_id="r1", status=RunStatus.SUCCEEDED
-            ),
+            run_record=RunRegistryRecord(run_id="r1", status=RunStatus.SUCCEEDED),
             result_entries=(
                 ResultRegistryEntry(
                     entry_id="e1",
@@ -313,9 +299,7 @@ class TestRegistryWrite:
     def test_request_duplicate_entry_ids_rejected(self) -> None:
         with pytest.raises(ValidationError):
             RegistryWriteRequest(
-                run_record=RunRegistryRecord(
-                    run_id="r1", status=RunStatus.SUCCEEDED
-                ),
+                run_record=RunRegistryRecord(run_id="r1", status=RunStatus.SUCCEEDED),
                 result_entries=(
                     ResultRegistryEntry(
                         entry_id="e1",
@@ -333,16 +317,12 @@ class TestRegistryWrite:
             )
 
     def test_result(self) -> None:
-        r = RegistryWriteResult(
-            run_id="r1", wrote_run_record=True, result_entry_count=1
-        )
+        r = RegistryWriteResult(run_id="r1", wrote_run_record=True, result_entry_count=1)
         assert r.issues == ()
 
     def test_result_negative_count_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            RegistryWriteResult(
-                run_id="r1", wrote_run_record=True, result_entry_count=-1
-            )
+            RegistryWriteResult(run_id="r1", wrote_run_record=True, result_entry_count=-1)
 
     def test_result_naive_written_at_normalized(self) -> None:
         r = RegistryWriteResult(

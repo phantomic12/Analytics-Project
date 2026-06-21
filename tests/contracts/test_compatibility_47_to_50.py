@@ -84,9 +84,7 @@ def _handle() -> DatasetHandle:
 
 def _limits() -> ExecutionLimitPolicy:
     return ExecutionLimitPolicy(
-        collect=CollectPolicy(
-            mode=CollectMode.BOUNDED, max_rows=10_000
-        ),
+        collect=CollectPolicy(mode=CollectMode.BOUNDED, max_rows=10_000),
         pandas_conversion=PandasConversionPolicy(
             mode=PandasConversionMode.BOUNDED, max_rows=10_000
         ),
@@ -95,9 +93,7 @@ def _limits() -> ExecutionLimitPolicy:
 
 
 def _hash() -> ArtifactHash:
-    return ArtifactHash(
-        algorithm=ArtifactHashAlgorithm.SHA256, digest="abc"
-    )
+    return ArtifactHash(algorithm=ArtifactHashAlgorithm.SHA256, digest="abc")
 
 
 def _storage() -> ArtifactStoragePolicy:
@@ -249,14 +245,10 @@ class TestExecutionLimitsToBackendCompatibility:
 
     def test_policy_negative_knobs_rejected(self) -> None:
         with pytest.raises(ValueError):
-            ExecutionLimitsToBackendAdapter.from_backend_knobs(
-                max_rows=-1, max_bytes=100
-            )
+            ExecutionLimitsToBackendAdapter.from_backend_knobs(max_rows=-1, max_bytes=100)
 
     def test_policy_with_max_columns_none(self) -> None:
-        p = ExecutionLimitsToBackendAdapter.from_backend_knobs(
-            max_rows=1000, max_bytes=1_000_000
-        )
+        p = ExecutionLimitsToBackendAdapter.from_backend_knobs(max_rows=1000, max_bytes=1_000_000)
         assert p.memory_budget.max_bytes == 1_000_000
 
 
@@ -324,6 +316,4 @@ class TestArtifactToCacheCompatibility:
                 digest="abc",
             ),
         )
-        assert CacheFingerprint.model_validate(
-            fp.model_dump(mode="json")
-        ) == fp
+        assert CacheFingerprint.model_validate(fp.model_dump(mode="json")) == fp

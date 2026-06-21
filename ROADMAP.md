@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **43 done** · **98 remaining**
+**Totals**: 141 tasks · **55 done** · **86 remaining**
 
 ---
 
@@ -174,31 +174,31 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Define robustness and skipped-check contracts
   - Files: `src/analytics_platform/contracts/validation.py; tests/contracts/test_robustness_contracts.py`
   - Commit: `Add robustness contracts`
-- [ ] **#39** Report section contracts _(effort: Max)_
+- [x] **#39** Report section contracts _(effort: Max)_
   - Goal: Define report specs, section types, and section objects
   - Files: `src/analytics_platform/contracts/reporting.py; tests/contracts/test_report_section_contracts.py`
   - Commit: `Add report section contracts`
-- [ ] **#40** Report bundle and artifact contracts _(effort: Max)_
+- [x] **#40** Report bundle and artifact contracts _(effort: Max)_
   - Goal: Define report bundles and generated artifact sets
   - Files: `src/analytics_platform/contracts/reporting.py; tests/contracts/test_report_bundle_contracts.py`
   - Commit: `Add report bundle contracts`
-- [ ] **#41** Registry contracts _(effort: Max)_
+- [x] **#41** Registry contracts _(effort: Max)_
   - Goal: Define result registry and experiment history interfaces
   - Files: `src/analytics_platform/contracts/registry.py; tests/contracts/test_registry_contracts.py`
   - Commit: `Add registry contracts`
-- [ ] **#42** Pipeline stage contracts _(effort: Max)_
+- [x] **#42** Pipeline stage contracts _(effort: Max)_
   - Goal: Define pipeline stage names and stage result rules
   - Files: `src/analytics_platform/contracts/pipeline.py; tests/contracts/test_pipeline_stage_contracts.py`
   - Commit: `Add pipeline stage contracts`
-- [ ] **#43** Analysis plan contracts _(effort: Max)_
+- [x] **#43** Analysis plan contracts _(effort: Max)_
   - Goal: Define top-level analysis plan contract
   - Files: `src/analytics_platform/contracts/pipeline.py; tests/contracts/test_analysis_plan_contracts.py`
   - Commit: `Add analysis plan contracts`
-- [ ] **#44** Run manifest contracts _(effort: Max)_
+- [x] **#44** Run manifest contracts _(effort: Max)_
   - Goal: Define reproducibility manifest contracts
   - Files: `src/analytics_platform/contracts/pipeline.py; tests/contracts/test_run_manifest_contracts.py`
   - Commit: `Add run manifest contracts`
-- [ ] **#45** Analysis run result contracts _(effort: Max)_
+- [x] **#45** Analysis run result contracts _(effort: Max)_
   - Goal: Define top-level pipeline run result
   - Files: `src/analytics_platform/contracts/pipeline.py; tests/contracts/test_analysis_run_result_contracts.py`
   - Commit: `Add analysis run result contracts`
@@ -209,19 +209,19 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 2 — Compatibility Tests
 
-- [ ] **#47** Config-to-pipeline compatibility _(effort: Max)_
+- [x] **#47** Config-to-pipeline compatibility _(effort: Max)_
   - Goal: Prove config shape feeds pipeline contract
   - Files: `tests/contracts/test_config_to_pipeline_contract.py; tests/fixtures/configs/profile_only.yaml`
   - Commit: `Add config to pipeline contract test`
-- [ ] **#48** Execution-to-dataset compatibility _(effort: Max)_
+- [x] **#48** Execution-to-dataset compatibility _(effort: Max)_
   - Goal: Prove backend refs can support dataset handles
   - Files: `tests/contracts/test_execution_to_dataset_contract.py`
   - Commit: `Add execution dataset compatibility test`
-- [ ] **#49** Execution-limits-to-backend compatibility _(effort: Max)_
+- [x] **#49** Execution-limits-to-backend compatibility _(effort: Max)_
   - Goal: Prove backend requests include execution limits
   - Files: `tests/contracts/test_execution_limits_to_backend_contract.py`
   - Commit: `Add execution limits backend compatibility test`
-- [ ] **#50** Artifact-to-cache compatibility _(effort: Max)_
+- [x] **#50** Artifact-to-cache compatibility _(effort: Max)_
   - Goal: Prove artifacts can participate in cache keys
   - Files: `tests/contracts/test_artifact_to_cache_contract.py`
   - Commit: `Add artifact cache compatibility test`
@@ -320,7 +320,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
   - Goal: Prevent hidden orchestration and backend leakage
   - Files: `tests/architecture/test_domain_backend_boundaries.py; tests/architecture/test_artifact_registry_boundaries.py`
   - Commit: `Add backend artifact architecture tests`
-- [ ] **#74** Reporting architecture tests _(effort: Max)_
+- [x] **#74** Reporting architecture tests _(effort: Max)_
   - Goal: Ensure reporting consumes contracts only
   - Files: `tests/architecture/test_reporting_does_not_import_domain_implementations.py; tests/architecture/test_domain_modules_do_not_import_pipeline.py`
   - Commit: `Add reporting architecture tests`
