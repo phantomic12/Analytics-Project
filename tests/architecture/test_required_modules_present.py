@@ -72,9 +72,7 @@ class TestRequiredModulesPresent:
         "module_name, build_queue_task",
         list(EXPECTED_MODULES),
     )
-    def test_module_is_importable(
-        self, module_name: str, build_queue_task: int
-    ) -> None:
+    def test_module_is_importable(self, module_name: str, build_queue_task: int) -> None:
         """Every contract module listed in EXPECTED_MODULES must import.
 
         A failure here means a Build Queue v2.1 contract task is missing
@@ -270,12 +268,8 @@ class TestRequiredPublicTypes:
         try:
             module = importlib.import_module(fqmn)
         except ImportError as exc:  # pragma: no cover - parallel to test above
-            pytest.fail(
-                f"Required contract module {fqmn!r} is not importable: {exc}"
-            )
-        missing: list[str] = [
-            name for name in type_names if not hasattr(module, name)
-        ]
+            pytest.fail(f"Required contract module {fqmn!r} is not importable: {exc}")
+        missing: list[str] = [name for name in type_names if not hasattr(module, name)]
         assert not missing, (
             f"Contract module {fqmn!r} is missing documented public types: "
             f"{missing}. See docs/contracts/contracts-index-v1.1.md."

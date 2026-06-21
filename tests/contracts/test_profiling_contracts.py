@@ -85,9 +85,7 @@ def _handle(name: str = "orders") -> DatasetHandle:
 
 def _default_execution_limits() -> ExecutionLimitPolicy:
     return ExecutionLimitPolicy(
-        collect=CollectPolicy(
-            mode=CollectMode.BOUNDED, max_rows=10_000
-        ),
+        collect=CollectPolicy(mode=CollectMode.BOUNDED, max_rows=10_000),
         pandas_conversion=PandasConversionPolicy(
             mode=PandasConversionMode.BOUNDED,
             max_rows=10_000,
@@ -112,10 +110,7 @@ class TestProfileComputationMode:
 
 class TestProfileApproximationMethod:
     def test_known_members(self) -> None:
-        assert (
-            ProfileApproximationMethod.RESERVOIR_SAMPLING.value
-            == "reservoir_sampling"
-        )
+        assert ProfileApproximationMethod.RESERVOIR_SAMPLING.value == "reservoir_sampling"
         assert ProfileApproximationMethod.T_DIGEST.value == "t_digest"
         assert ProfileApproximationMethod.HLL.value == "hll"
         assert ProfileApproximationMethod.UNKNOWN.value == "unknown"
@@ -261,9 +256,7 @@ class TestDistributionSummary:
 # ---------------------------------------------------------------------------
 class TestNumericProfile:
     def test_minimal(self) -> None:
-        n = NumericProfile(
-            distribution=DistributionSummary(min=0.0, max=10.0)
-        )
+        n = NumericProfile(distribution=DistributionSummary(min=0.0, max=10.0))
         assert n.zero_count is None
 
     def test_with_sign_counts(self) -> None:
@@ -279,9 +272,7 @@ class TestNumericProfile:
 
     def test_negative_counts_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            NumericProfile(
-                distribution=DistributionSummary(), zero_count=-1
-            )
+            NumericProfile(distribution=DistributionSummary(), zero_count=-1)
 
     def test_round_trip(self) -> None:
         n = NumericProfile(distribution=DistributionSummary())
@@ -357,9 +348,7 @@ class TestDatetimeProfile:
             )
 
     def test_round_trip(self) -> None:
-        d = DatetimeProfile(
-            min=datetime(2026, 1, 1, tzinfo=timezone.utc)
-        )
+        d = DatetimeProfile(min=datetime(2026, 1, 1, tzinfo=timezone.utc))
         assert DatetimeProfile.model_validate(d.model_dump(mode="json")) == d
 
 
@@ -579,9 +568,7 @@ class TestProfilingSpec:
             ProfilingSpec(compute_outliers=True)
 
     def test_compute_outliers_with_method_ok(self) -> None:
-        s = ProfilingSpec(
-            compute_outliers=True, outlier_method=OutlierDetectionMethod.IQR
-        )
+        s = ProfilingSpec(compute_outliers=True, outlier_method=OutlierDetectionMethod.IQR)
         assert s.outlier_method is OutlierDetectionMethod.IQR
 
     def test_compute_outliers_false_forbids_method(self) -> None:
@@ -714,14 +701,8 @@ class TestDatasetProfile:
     def test_with_warnings_and_issues(self) -> None:
         p = DatasetProfile(
             dataset=_handle(),
-            issues=(
-                Issue(
-                    code="I", severity=Severity.WARNING, message="m"
-                ),
-            ),
-            warnings=(
-                WarningRecord(code="W", message="m"),
-            ),
+            issues=(Issue(code="I", severity=Severity.WARNING, message="m"),),
+            warnings=(WarningRecord(code="W", message="m"),),
         )
         assert len(p.issues) == 1
 
@@ -749,6 +730,4 @@ def test_profiling_contracts_do_not_import_heavy_libs() -> None:
 
     heavy = {"polars", "pandas", "duckdb", "numpy", "scipy", "statsmodels"}
     leaked = heavy.intersection(sys.modules)
-    assert not leaked, (
-        f"heavy libs imported by profiling contracts: {leaked}"
-    )
+    assert not leaked, f"heavy libs imported by profiling contracts: {leaked}"

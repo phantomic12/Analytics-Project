@@ -111,9 +111,7 @@ class ColumnMissingness(_QualityContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    column_name: ColumnName = Field(
-        ..., description="ColumnName of the column."
-    )
+    column_name: ColumnName = Field(..., description="ColumnName of the column.")
     missing_count: int | None = Field(
         default=None,
         ge=0,
@@ -149,9 +147,7 @@ class ColumnMissingness(_QualityContractModel):
             and self.total_count is not None
             and self.missing_count > self.total_count
         ):
-            raise ValueError(
-                "ColumnMissingness.missing_count must not exceed total_count."
-            )
+            raise ValueError("ColumnMissingness.missing_count must not exceed total_count.")
         return self
 
 
@@ -223,9 +219,7 @@ class RowMissingnessSummary(_QualityContractModel):
             and self.complete_rows is not None
             and self.complete_rows > self.total_rows
         ):
-            raise ValueError(
-                "RowMissingnessSummary.complete_rows must not exceed total_rows."
-            )
+            raise ValueError("RowMissingnessSummary.complete_rows must not exceed total_rows.")
         return self
 
     @model_validator(mode="after")
@@ -250,9 +244,7 @@ class RowMissingnessSummary(_QualityContractModel):
                     "RowMissingnessSummary histogram missing_count must be non-negative."
                 )
             if row_count < 0:
-                raise ValueError(
-                    "RowMissingnessSummary histogram row_count must be non-negative."
-                )
+                raise ValueError("RowMissingnessSummary histogram row_count must be non-negative.")
             if missing_count in seen:
                 raise ValueError(
                     "RowMissingnessSummary histogram must have unique missing_count keys."
@@ -313,9 +305,7 @@ class MissingnessPatternSummary(_QualityContractModel):
                     "and <= 256 characters."
                 )
             if count < 0:
-                raise ValueError(
-                    "MissingnessPatternSummary counts must be non-negative."
-                )
+                raise ValueError("MissingnessPatternSummary counts must be non-negative.")
             if pattern in seen_labels:
                 raise ValueError(
                     f"MissingnessPatternSummary has duplicate pattern label: {pattern!r}."
@@ -353,9 +343,7 @@ class JoinIntroducedMissingness(_QualityContractModel):
     - ``notes``: optional bounded human-readable note.
     """
 
-    column_name: ColumnName = Field(
-        ..., description="ColumnName of the column."
-    )
+    column_name: ColumnName = Field(..., description="ColumnName of the column.")
     introduced_missing_count: int | None = Field(
         default=None,
         ge=0,
@@ -390,8 +378,7 @@ class JoinIntroducedMissingness(_QualityContractModel):
             and self.introduced_missing_count > self.total_count
         ):
             raise ValueError(
-                "JoinIntroducedMissingness.introduced_missing_count must not "
-                "exceed total_count."
+                "JoinIntroducedMissingness.introduced_missing_count must not exceed total_count."
             )
         return self
 
@@ -437,12 +424,8 @@ class ModelExclusionSummary(_QualityContractModel):
     - ``run_id`` / ``stage_id``: optional provenance locators.
     """
 
-    column_name: ColumnName = Field(
-        ..., description="ColumnName of the excluded column."
-    )
-    reason: ModelExclusionReason = Field(
-        ..., description="ModelExclusionReason for the exclusion."
-    )
+    column_name: ColumnName = Field(..., description="ColumnName of the excluded column.")
+    reason: ModelExclusionReason = Field(..., description="ModelExclusionReason for the exclusion.")
     detail: str | None = Field(
         default=None,
         max_length=1024,
@@ -741,8 +724,8 @@ class DataQualityReport(_QualityContractModel):
                         "DataQualityReport with is_passthrough_clean=True "
                         "must not contain ERROR-or-higher quality_issues."
                     )
-            for issue in self.issues:
-                if issue.severity in (Severity.ERROR, Severity.CRITICAL):
+            for common_issue in self.issues:
+                if common_issue.severity in (Severity.ERROR, Severity.CRITICAL):
                     raise ValueError(
                         "DataQualityReport with is_passthrough_clean=True "
                         "must not contain ERROR-or-higher common issues."

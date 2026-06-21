@@ -323,9 +323,7 @@ class LineageRecord(_LineageContractModel):
     )
     derived: DerivedDatasetRef | None = Field(
         default=None,
-        description=(
-            "Optional DerivedDatasetRef. Required unless operation is PROFILE."
-        ),
+        description=("Optional DerivedDatasetRef. Required unless operation is PROFILE."),
     )
     recorded_at: datetime | None = Field(
         default=None,

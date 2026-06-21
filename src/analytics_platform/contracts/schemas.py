@@ -247,8 +247,7 @@ class ObservedSchema(_SchemasContractModel):
         for col in self.columns:
             if col.name in seen:
                 raise ValueError(
-                    f"ObservedSchema has duplicate ColumnSchema for column "
-                    f"name={col.name!r}."
+                    f"ObservedSchema has duplicate ColumnSchema for column name={col.name!r}."
                 )
             seen.add(col.name)
         return self
@@ -310,8 +309,7 @@ class ExpectedColumnSchema(_SchemasContractModel):
     def _at_least_one_type(self) -> "ExpectedColumnSchema":
         if self.physical_type is None and self.logical_type is None:
             raise ValueError(
-                "ExpectedColumnSchema requires at least one of "
-                "physical_type or logical_type."
+                "ExpectedColumnSchema requires at least one of physical_type or logical_type."
             )
         return self
 
@@ -398,9 +396,7 @@ class ExpectedSchema(_SchemasContractModel):
             and self.max_row_count is not None
             and self.max_row_count < self.min_row_count
         ):
-            raise ValueError(
-                "ExpectedSchema max_row_count must be >= min_row_count."
-            )
+            raise ValueError("ExpectedSchema max_row_count must be >= min_row_count.")
         return self
 
 
@@ -634,16 +630,11 @@ class SchemaValidationReport(_SchemasContractModel):
     @model_validator(mode="after")
     def _passed_consistent_with_issues(self) -> "SchemaValidationReport":
         has_error = any(
-            issue.severity in (Severity.ERROR, Severity.CRITICAL)
-            for issue in self.schema_issues
-        ) or any(
-            issue.severity in (Severity.ERROR, Severity.CRITICAL)
-            for issue in self.issues
-        )
+            issue.severity in (Severity.ERROR, Severity.CRITICAL) for issue in self.schema_issues
+        ) or any(issue.severity in (Severity.ERROR, Severity.CRITICAL) for issue in self.issues)
         if self.passed and has_error:
             raise ValueError(
-                "SchemaValidationReport with passed=True must not contain "
-                "ERROR-or-higher issues."
+                "SchemaValidationReport with passed=True must not contain ERROR-or-higher issues."
             )
         if not self.passed and not self.schema_issues and not self.issues:
             # If the report is not passed but has no issues, the caller
@@ -651,11 +642,7 @@ class SchemaValidationReport(_SchemasContractModel):
             # mismatch or row-count bound violation). We allow it but
             # require that the convenience counters be present so the
             # cause is visible to consumers.
-            if not (
-                self.missing_required_columns
-                or self.extra_columns
-                or self.type_mismatches
-            ):
+            if not (self.missing_required_columns or self.extra_columns or self.type_mismatches):
                 raise ValueError(
                     "SchemaValidationReport with passed=False must include "
                     "at least one schema_issue, issue, or a non-empty "
@@ -674,7 +661,6 @@ class SchemaValidationReport(_SchemasContractModel):
             values = getattr(self, field_name)
             if len(set(values)) != len(values):
                 raise ValueError(
-                    f"SchemaValidationReport.{field_name} contains duplicate "
-                    f"column names."
+                    f"SchemaValidationReport.{field_name} contains duplicate column names."
                 )
         return self

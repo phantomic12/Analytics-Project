@@ -276,9 +276,7 @@ class SemanticColumnProfile(_SemanticsContractModel):
         ...,
         description="SemanticTypeConfidence for the primary inference.",
     )
-    alternatives: tuple[
-        tuple[SemanticColumnType, SemanticTypeConfidence], ...
-    ] = Field(
+    alternatives: tuple[tuple[SemanticColumnType, SemanticTypeConfidence], ...] = Field(
         default=(),
         description="Optional tuple of (SemanticColumnType, confidence) alternatives.",
     )

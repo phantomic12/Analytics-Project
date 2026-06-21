@@ -86,9 +86,7 @@ class TestColumnMissingness:
 
     def test_missing_count_exceeds_total_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ColumnMissingness(
-                column_name="amount", missing_count=200, total_count=100
-            )
+            ColumnMissingness(column_name="amount", missing_count=200, total_count=100)
 
     def test_negative_counts_rejected(self) -> None:
         with pytest.raises(ValidationError):
@@ -156,21 +154,15 @@ class TestRowMissingnessSummary:
 
     def test_histogram_keys_must_be_increasing(self) -> None:
         with pytest.raises(ValidationError):
-            RowMissingnessSummary(
-                missing_per_row_histogram=((3, 1), (2, 1))
-            )
+            RowMissingnessSummary(missing_per_row_histogram=((3, 1), (2, 1)))
 
     def test_histogram_keys_must_be_unique(self) -> None:
         with pytest.raises(ValidationError):
-            RowMissingnessSummary(
-                missing_per_row_histogram=((1, 5), (1, 6))
-            )
+            RowMissingnessSummary(missing_per_row_histogram=((1, 5), (1, 6)))
 
     def test_histogram_negative_counts_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            RowMissingnessSummary(
-                missing_per_row_histogram=((1, -1),)
-            )
+            RowMissingnessSummary(missing_per_row_histogram=((1, -1),))
 
     def test_round_trip(self) -> None:
         s = RowMissingnessSummary(total_rows=10)
@@ -194,9 +186,7 @@ class TestMissingnessPatternSummary:
 
     def test_duplicate_pattern_labels_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            MissingnessPatternSummary(
-                patterns=(("a", 1), ("a", 2))
-            )
+            MissingnessPatternSummary(patterns=(("a", 1), ("a", 2)))
 
     def test_empty_pattern_label_rejected(self) -> None:
         with pytest.raises(ValidationError):
@@ -212,15 +202,11 @@ class TestMissingnessPatternSummary:
 
     def test_patterns_exceed_max_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            MissingnessPatternSummary(
-                patterns=(("a", 1), ("b", 1)), max_patterns=1
-            )
+            MissingnessPatternSummary(patterns=(("a", 1), ("b", 1)), max_patterns=1)
 
     def test_round_trip(self) -> None:
         s = MissingnessPatternSummary(patterns=(("a", 1),))
-        assert MissingnessPatternSummary.model_validate(
-            s.model_dump(mode="json")
-        ) == s
+        assert MissingnessPatternSummary.model_validate(s.model_dump(mode="json")) == s
 
 
 # ---------------------------------------------------------------------------
@@ -251,9 +237,7 @@ class TestJoinIntroducedMissingness:
 
     def test_round_trip(self) -> None:
         j = JoinIntroducedMissingness(column_name="c", introduced_missing_count=5)
-        assert JoinIntroducedMissingness.model_validate(
-            j.model_dump(mode="json")
-        ) == j
+        assert JoinIntroducedMissingness.model_validate(j.model_dump(mode="json")) == j
 
 
 # ---------------------------------------------------------------------------
@@ -261,9 +245,7 @@ class TestJoinIntroducedMissingness:
 # ---------------------------------------------------------------------------
 class TestModelExclusionSummary:
     def test_minimal(self) -> None:
-        e = ModelExclusionSummary(
-            column_name="id", reason=ModelExclusionReason.IDENTIFIER
-        )
+        e = ModelExclusionSummary(column_name="id", reason=ModelExclusionReason.IDENTIFIER)
         assert e.detail is None
         assert e.missing_ratio is None
 
@@ -286,9 +268,7 @@ class TestModelExclusionSummary:
             )
 
     def test_round_trip(self) -> None:
-        e = ModelExclusionSummary(
-            column_name="x", reason=ModelExclusionReason.IDENTIFIER
-        )
+        e = ModelExclusionSummary(column_name="x", reason=ModelExclusionReason.IDENTIFIER)
         assert ModelExclusionSummary.model_validate(e.model_dump(mode="json")) == e
 
 
@@ -417,9 +397,7 @@ class TestMissingDataReport:
 # ---------------------------------------------------------------------------
 class TestDataQualityReport:
     def test_minimal(self) -> None:
-        r = DataQualityReport(
-            dataset=_handle(), missing_data=MissingDataReport(dataset=_handle())
-        )
+        r = DataQualityReport(dataset=_handle(), missing_data=MissingDataReport(dataset=_handle()))
         assert r.quality_issues == ()
         assert r.model_exclusions == ()
 
@@ -443,14 +421,8 @@ class TestDataQualityReport:
             ),
             has_target_associated_missingness=False,
             is_passthrough_clean=True,
-            issues=(
-                Issue(
-                    code="I", severity=Severity.WARNING, message="m"
-                ),
-            ),
-            warnings=(
-                WarningRecord(code="W", message="m"),
-            ),
+            issues=(Issue(code="I", severity=Severity.WARNING, message="m"),),
+            warnings=(WarningRecord(code="W", message="m"),),
         )
         assert r.is_passthrough_clean is True
 
@@ -492,11 +464,7 @@ class TestDataQualityReport:
             DataQualityReport(
                 dataset=_handle(),
                 missing_data=MissingDataReport(dataset=_handle()),
-                issues=(
-                    Issue(
-                        code="ERR", severity=Severity.ERROR, message="e"
-                    ),
-                ),
+                issues=(Issue(code="ERR", severity=Severity.ERROR, message="e"),),
                 is_passthrough_clean=True,
             )
 
@@ -517,9 +485,7 @@ class TestDataQualityReport:
         assert r.is_passthrough_clean is True
 
     def test_round_trip(self) -> None:
-        r = DataQualityReport(
-            dataset=_handle(), missing_data=_missing_data_report()
-        )
+        r = DataQualityReport(dataset=_handle(), missing_data=_missing_data_report())
         assert DataQualityReport.model_validate(r.model_dump(mode="json")) == r
 
 

@@ -77,9 +77,7 @@ def _trans(
     transformation_id: TransformationId = "t1",
     operation: LineageOperationType = LineageOperationType.TRANSFORM,
 ) -> TransformationRef:
-    return TransformationRef(
-        transformation_id=transformation_id, operation=operation
-    )
+    return TransformationRef(transformation_id=transformation_id, operation=operation)
 
 
 def _derived(dataset_id: str = "d2") -> DerivedDatasetRef:
@@ -129,9 +127,7 @@ class TestSourceDatasetRef:
             s.dataset_id = "d2"  # type: ignore[misc]
 
     def test_round_trip(self) -> None:
-        s = SourceDatasetRef(
-            dataset_id="d1", dataset_ref="ds-v1", fingerprint="abc", role="left"
-        )
+        s = SourceDatasetRef(dataset_id="d1", dataset_ref="ds-v1", fingerprint="abc", role="left")
         assert SourceDatasetRef.model_validate(s.model_dump(mode="json")) == s
 
 
@@ -160,9 +156,7 @@ class TestDerivedDatasetRef:
 
 class TestTransformationRef:
     def test_minimal(self) -> None:
-        t = TransformationRef(
-            transformation_id="t1", operation=LineageOperationType.LOAD
-        )
+        t = TransformationRef(transformation_id="t1", operation=LineageOperationType.LOAD)
         assert t.transformation_id == "t1"
         assert t.operation is LineageOperationType.LOAD
         assert t.code is None
@@ -185,9 +179,7 @@ class TestTransformationRef:
 
     def test_empty_transformation_id_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            TransformationRef(
-                transformation_id="", operation=LineageOperationType.LOAD
-            )
+            TransformationRef(transformation_id="", operation=LineageOperationType.LOAD)
 
     def test_round_trip(self) -> None:
         t = TransformationRef(
@@ -410,9 +402,7 @@ class TestLineageGraphSnapshot:
             root_dataset_ids=("d1",),
             stage_ids=("stage-load",),
             captured_at=datetime(2026, 6, 20, 18, 0, 0, tzinfo=timezone.utc),
-            issues=(
-                Issue(code="X", severity=Severity.WARNING, message="m"),
-            ),
+            issues=(Issue(code="X", severity=Severity.WARNING, message="m"),),
             metadata={"k": "v"},
         )
         assert snap.root_dataset_ids == ("d1",)

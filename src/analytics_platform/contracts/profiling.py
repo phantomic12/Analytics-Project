@@ -200,9 +200,7 @@ class QuantileSummary(_ProfilingContractModel):
         last: float | None = None
         for q, v in self.quantile_pairs:
             if not (0.0 < q <= 1.0):
-                raise ValueError(
-                    "QuantileSummary quantiles must be in (0.0, 1.0]."
-                )
+                raise ValueError("QuantileSummary quantiles must be in (0.0, 1.0].")
             if last is not None and q <= last:
                 raise ValueError(
                     "QuantileSummary quantile_pairs must be strictly increasing in quantile order."
@@ -264,22 +262,14 @@ class FrequencySummary(_ProfilingContractModel):
     def _negative_counts_rejected(self) -> "FrequencySummary":
         for _value, count in self.entries:
             if count < 0:
-                raise ValueError(
-                    "FrequencySummary entry counts must be non-negative."
-                )
+                raise ValueError("FrequencySummary entry counts must be non-negative.")
         if self.total_count is not None and self.total_count < 0:
-            raise ValueError(
-                "FrequencySummary.total_count must be non-negative."
-            )
+            raise ValueError("FrequencySummary.total_count must be non-negative.")
         return self
 
     @model_validator(mode="after")
     def _truncated_consistent_with_max_entries(self) -> "FrequencySummary":
-        if (
-            self.truncated
-            and self.max_entries is not None
-            and len(self.entries) < self.max_entries
-        ):
+        if self.truncated and self.max_entries is not None and len(self.entries) < self.max_entries:
             raise ValueError(
                 "FrequencySummary truncated=True with max_entries set requires "
                 "at least max_entries entries."
@@ -346,14 +336,8 @@ class DistributionSummary(_ProfilingContractModel):
 
     @model_validator(mode="after")
     def _min_max_consistent(self) -> "DistributionSummary":
-        if (
-            self.min is not None
-            and self.max is not None
-            and self.max < self.min
-        ):
-            raise ValueError(
-                "DistributionSummary.max must be >= min."
-            )
+        if self.min is not None and self.max is not None and self.max < self.min:
+            raise ValueError("DistributionSummary.max must be >= min.")
         return self
 
 
@@ -457,12 +441,8 @@ class CategoricalProfile(_ProfilingContractModel):
 
     @model_validator(mode="after")
     def _most_frequent_pair_consistent(self) -> "CategoricalProfile":
-        if (
-            self.most_frequent_value is not None
-            and self.most_frequent_count is None
-        ) or (
-            self.most_frequent_value is None
-            and self.most_frequent_count is not None
+        if (self.most_frequent_value is not None and self.most_frequent_count is None) or (
+            self.most_frequent_value is None and self.most_frequent_count is not None
         ):
             raise ValueError(
                 "CategoricalProfile.most_frequent_value and most_frequent_count "
@@ -517,21 +497,11 @@ class DatetimeProfile(_ProfilingContractModel):
     @model_validator(mode="after")
     def _min_max_aware_and_ordered(self) -> "DatetimeProfile":
         if self.min is not None and self.min.tzinfo is None:
-            object.__setattr__(
-                self, "min", self.min.replace(tzinfo=timezone.utc)
-            )
+            object.__setattr__(self, "min", self.min.replace(tzinfo=timezone.utc))
         if self.max is not None and self.max.tzinfo is None:
-            object.__setattr__(
-                self, "max", self.max.replace(tzinfo=timezone.utc)
-            )
-        if (
-            self.min is not None
-            and self.max is not None
-            and self.max < self.min
-        ):
-            raise ValueError(
-                "DatetimeProfile.max must be >= min."
-            )
+            object.__setattr__(self, "max", self.max.replace(tzinfo=timezone.utc))
+        if self.min is not None and self.max is not None and self.max < self.min:
+            raise ValueError("DatetimeProfile.max must be >= min.")
         return self
 
 
@@ -576,9 +546,7 @@ class MissingnessProfile(_ProfilingContractModel):
             and self.total_count is not None
             and self.missing_count > self.total_count
         ):
-            raise ValueError(
-                "MissingnessProfile.missing_count must not exceed total_count."
-            )
+            raise ValueError("MissingnessProfile.missing_count must not exceed total_count.")
         return self
 
 
@@ -663,9 +631,7 @@ class DuplicateProfile(_ProfilingContractModel):
             and self.total_count is not None
             and self.duplicate_count > self.total_count
         ):
-            raise ValueError(
-                "DuplicateProfile.duplicate_count must not exceed total_count."
-            )
+            raise ValueError("DuplicateProfile.duplicate_count must not exceed total_count.")
         return self
 
 
@@ -731,9 +697,7 @@ class OutlierProfile(_ProfilingContractModel):
             and self.total_count is not None
             and self.outlier_count > self.total_count
         ):
-            raise ValueError(
-                "OutlierProfile.outlier_count must not exceed total_count."
-            )
+            raise ValueError("OutlierProfile.outlier_count must not exceed total_count.")
         return self
 
     @model_validator(mode="after")
@@ -743,9 +707,7 @@ class OutlierProfile(_ProfilingContractModel):
             and self.upper_bound is not None
             and self.upper_bound < self.lower_bound
         ):
-            raise ValueError(
-                "OutlierProfile.upper_bound must be >= lower_bound."
-            )
+            raise ValueError("OutlierProfile.upper_bound must be >= lower_bound.")
         return self
 
     @model_validator(mode="after")
@@ -872,13 +834,9 @@ class ColumnProfile(_ProfilingContractModel):
 
     @model_validator(mode="after")
     def _exact_mode_forbids_sample_size(self) -> "ColumnProfile":
-        if (
-            self.computation_mode is ProfileComputationMode.EXACT
-            and self.sample_size is not None
-        ):
+        if self.computation_mode is ProfileComputationMode.EXACT and self.sample_size is not None:
             raise ValueError(
-                "ColumnProfile with computation_mode=EXACT must not include "
-                "sample_size."
+                "ColumnProfile with computation_mode=EXACT must not include sample_size."
             )
         return self
 
@@ -1037,15 +995,11 @@ class ProfilingSpec(_ProfilingContractModel):
       ``APPROXIMATE``. ``None`` means "always exact".
     """
 
-    compute_numeric: bool = Field(
-        default=True, description="Include NumericProfile summaries."
-    )
+    compute_numeric: bool = Field(default=True, description="Include NumericProfile summaries.")
     compute_categorical: bool = Field(
         default=True, description="Include CategoricalProfile summaries."
     )
-    compute_datetime: bool = Field(
-        default=True, description="Include DatetimeProfile summaries."
-    )
+    compute_datetime: bool = Field(default=True, description="Include DatetimeProfile summaries.")
     compute_missingness: bool = Field(
         default=True, description="Include MissingnessProfile summaries."
     )
@@ -1055,9 +1009,7 @@ class ProfilingSpec(_ProfilingContractModel):
     compute_duplicates: bool = Field(
         default=False, description="Include DuplicateProfile summaries."
     )
-    compute_outliers: bool = Field(
-        default=False, description="Include OutlierProfile summaries."
-    )
+    compute_outliers: bool = Field(default=False, description="Include OutlierProfile summaries.")
     outlier_method: OutlierDetectionMethod | None = Field(
         default=None,
         description="Optional OutlierDetectionMethod (required when compute_outliers=True).",
@@ -1155,9 +1107,7 @@ class ProfilingRequest(_ProfilingContractModel):
             and self.max_sample_size is not None
             and self.max_sample_size < self.min_sample_size
         ):
-            raise ValueError(
-                "ProfilingRequest.max_sample_size must be >= min_sample_size."
-            )
+            raise ValueError("ProfilingRequest.max_sample_size must be >= min_sample_size.")
         return self
 
 

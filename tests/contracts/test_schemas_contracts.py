@@ -130,9 +130,7 @@ class TestColumnSchema:
 
     def test_negative_ordinal_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ColumnSchema(
-                name="x", physical_type=PhysicalDataType.INT64, ordinal=-1
-            )
+            ColumnSchema(name="x", physical_type=PhysicalDataType.INT64, ordinal=-1)
 
     def test_round_trip(self) -> None:
         c = _col()
@@ -180,9 +178,7 @@ class TestExpectedColumnSchema:
             ExpectedColumnSchema(name="id")
 
     def test_physical_only(self) -> None:
-        c = ExpectedColumnSchema(
-            name="id", physical_type=PhysicalDataType.INT64
-        )
+        c = ExpectedColumnSchema(name="id", physical_type=PhysicalDataType.INT64)
         assert c.physical_type is PhysicalDataType.INT64
         assert c.logical_type is None
         assert c.required is True
@@ -204,9 +200,7 @@ class TestExpectedColumnSchema:
 
     def test_empty_name_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ExpectedColumnSchema(
-                name="", physical_type=PhysicalDataType.INT64
-            )
+            ExpectedColumnSchema(name="", physical_type=PhysicalDataType.INT64)
 
     def test_round_trip(self) -> None:
         c = ExpectedColumnSchema(
@@ -250,12 +244,8 @@ class TestExpectedSchema:
         with pytest.raises(ValidationError):
             ExpectedSchema(
                 columns=(
-                    ExpectedColumnSchema(
-                        name="id", physical_type=PhysicalDataType.INT64
-                    ),
-                    ExpectedColumnSchema(
-                        name="id", logical_type=LogicalDataType.INTEGER
-                    ),
+                    ExpectedColumnSchema(name="id", physical_type=PhysicalDataType.INT64),
+                    ExpectedColumnSchema(name="id", logical_type=LogicalDataType.INTEGER),
                 ),
             )
 
@@ -273,11 +263,7 @@ class TestExpectedSchema:
 
     def test_round_trip(self) -> None:
         s = ExpectedSchema(
-            columns=(
-                ExpectedColumnSchema(
-                    name="id", logical_type=LogicalDataType.INTEGER
-                ),
-            ),
+            columns=(ExpectedColumnSchema(name="id", logical_type=LogicalDataType.INTEGER),),
         )
         assert ExpectedSchema.model_validate(s.model_dump(mode="json")) == s
 
@@ -321,9 +307,7 @@ class TestSchemaIssue:
             SchemaIssue(code="X", severity=Severity.ERROR, message="")
 
     def test_round_trip(self) -> None:
-        i = SchemaIssue(
-            code="X", severity=Severity.WARNING, message="m", column_name="c"
-        )
+        i = SchemaIssue(code="X", severity=Severity.WARNING, message="m", column_name="c")
         assert SchemaIssue.model_validate(i.model_dump(mode="json")) == i
 
 
@@ -368,21 +352,15 @@ def _observed() -> ObservedSchema:
 def _expected() -> ExpectedSchema:
     return ExpectedSchema(
         columns=(
-            ExpectedColumnSchema(
-                name="id", physical_type=PhysicalDataType.INT64
-            ),
-            ExpectedColumnSchema(
-                name="name", physical_type=PhysicalDataType.UTF8
-            ),
+            ExpectedColumnSchema(name="id", physical_type=PhysicalDataType.INT64),
+            ExpectedColumnSchema(name="name", physical_type=PhysicalDataType.UTF8),
         ),
     )
 
 
 class TestSchemaValidationRequest:
     def test_minimal(self) -> None:
-        r = SchemaValidationRequest(
-            dataset=_handle(), observed=_observed(), expected=_expected()
-        )
+        r = SchemaValidationRequest(dataset=_handle(), observed=_observed(), expected=_expected())
         assert r.fail_on_warning is False
 
 
@@ -391,9 +369,7 @@ class TestSchemaValidationRequest:
 # ---------------------------------------------------------------------------
 class TestSchemaValidationReport:
     def test_passed_with_no_issues(self) -> None:
-        rep = SchemaValidationReport(
-            passed=True, observed=_observed(), expected=_expected()
-        )
+        rep = SchemaValidationReport(passed=True, observed=_observed(), expected=_expected())
         assert rep.passed is True
         assert rep.schema_issues == ()
 

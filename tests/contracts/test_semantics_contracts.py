@@ -58,9 +58,7 @@ def _profile(
         semantic_type=semantic_type,
         confidence=SemanticTypeConfidence(score=score, algorithm="rule_based"),
         logical_type=(
-            LogicalDataType.STRING
-            if semantic_type is SemanticColumnType.IDENTIFIER
-            else None
+            LogicalDataType.STRING if semantic_type is SemanticColumnType.IDENTIFIER else None
         ),
     )
 
@@ -107,9 +105,7 @@ class TestSemanticTypeConfidence:
         assert c.evidence_count is None
 
     def test_full(self) -> None:
-        c = SemanticTypeConfidence(
-            score=0.9, algorithm="name_match", evidence_count=3, notes="ok"
-        )
+        c = SemanticTypeConfidence(score=0.9, algorithm="name_match", evidence_count=3, notes="ok")
         assert c.algorithm == "name_match"
         assert c.evidence_count == 3
 
@@ -275,11 +271,7 @@ class TestSemanticTypeInferenceRequest:
     def test_full(self) -> None:
         r = SemanticTypeInferenceRequest(
             dataset=_handle(),
-            role_overrides=(
-                ColumnRoleAssignment(
-                    column_name="amount", role=ColumnRole.TARGET
-                ),
-            ),
+            role_overrides=(ColumnRoleAssignment(column_name="amount", role=ColumnRole.TARGET),),
             min_confidence=0.7,
             max_columns=50,
         )
@@ -292,9 +284,7 @@ class TestSemanticTypeInferenceRequest:
 
     def test_min_confidence_above_one_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            SemanticTypeInferenceRequest(
-                dataset=_handle(), min_confidence=1.5
-            )
+            SemanticTypeInferenceRequest(dataset=_handle(), min_confidence=1.5)
 
     def test_negative_max_columns_rejected(self) -> None:
         with pytest.raises(ValidationError):
@@ -305,12 +295,8 @@ class TestSemanticTypeInferenceRequest:
             SemanticTypeInferenceRequest(
                 dataset=_handle(),
                 role_overrides=(
-                    ColumnRoleAssignment(
-                        column_name="x", role=ColumnRole.FEATURE
-                    ),
-                    ColumnRoleAssignment(
-                        column_name="x", role=ColumnRole.TARGET
-                    ),
+                    ColumnRoleAssignment(column_name="x", role=ColumnRole.FEATURE),
+                    ColumnRoleAssignment(column_name="x", role=ColumnRole.TARGET),
                 ),
             )
 
@@ -320,9 +306,7 @@ class TestSemanticTypeInferenceRequest:
 # ---------------------------------------------------------------------------
 class TestSemanticTypeInferenceReport:
     def test_minimal(self) -> None:
-        rep = SemanticTypeInferenceReport(
-            dataset=_handle(), column_profiles=(_profile(),)
-        )
+        rep = SemanticTypeInferenceReport(dataset=_handle(), column_profiles=(_profile(),))
         assert rep.role_assignments == ()
         assert rep.risky_uses == ()
         assert rep.issues == ()
@@ -333,15 +317,9 @@ class TestSemanticTypeInferenceReport:
             dataset=_handle(),
             column_profiles=(
                 _profile("id", SemanticColumnType.IDENTIFIER),
-                _profile(
-                    "amount", SemanticColumnType.MEASUREMENT, score=0.8
-                ),
+                _profile("amount", SemanticColumnType.MEASUREMENT, score=0.8),
             ),
-            role_assignments=(
-                ColumnRoleAssignment(
-                    column_name="amount", role=ColumnRole.TARGET
-                ),
-            ),
+            role_assignments=(ColumnRoleAssignment(column_name="amount", role=ColumnRole.TARGET),),
             risky_uses=(
                 RiskyColumnUse(
                     column_name="id",
@@ -349,14 +327,8 @@ class TestSemanticTypeInferenceReport:
                     actual_use="used as a feature",
                 ),
             ),
-            issues=(
-                Issue(
-                    code="X", severity=Severity.WARNING, message="w"
-                ),
-            ),
-            warnings=(
-                WarningRecord(code="W", message="w"),
-            ),
+            issues=(Issue(code="X", severity=Severity.WARNING, message="w"),),
+            warnings=(WarningRecord(code="W", message="w"),),
         )
         assert len(rep.column_profiles) == 2
         assert len(rep.role_assignments) == 1
@@ -364,9 +336,7 @@ class TestSemanticTypeInferenceReport:
 
     def test_requires_at_least_one_profile(self) -> None:
         with pytest.raises(ValidationError):
-            SemanticTypeInferenceReport(
-                dataset=_handle(), column_profiles=()
-            )
+            SemanticTypeInferenceReport(dataset=_handle(), column_profiles=())
 
     def test_duplicate_profile_column_names_rejected(self) -> None:
         with pytest.raises(ValidationError):
@@ -384,22 +354,14 @@ class TestSemanticTypeInferenceReport:
                 dataset=_handle(),
                 column_profiles=(_profile("id"),),
                 role_assignments=(
-                    ColumnRoleAssignment(
-                        column_name="id", role=ColumnRole.FEATURE
-                    ),
-                    ColumnRoleAssignment(
-                        column_name="id", role=ColumnRole.TARGET
-                    ),
+                    ColumnRoleAssignment(column_name="id", role=ColumnRole.FEATURE),
+                    ColumnRoleAssignment(column_name="id", role=ColumnRole.TARGET),
                 ),
             )
 
     def test_round_trip(self) -> None:
-        rep = SemanticTypeInferenceReport(
-            dataset=_handle(), column_profiles=(_profile(),)
-        )
-        assert SemanticTypeInferenceReport.model_validate(
-            rep.model_dump(mode="json")
-        ) == rep
+        rep = SemanticTypeInferenceReport(dataset=_handle(), column_profiles=(_profile(),))
+        assert SemanticTypeInferenceReport.model_validate(rep.model_dump(mode="json")) == rep
 
 
 # ---------------------------------------------------------------------------
@@ -418,6 +380,4 @@ def test_semantics_contracts_do_not_import_heavy_libs() -> None:
 
     heavy = {"polars", "pandas", "duckdb", "numpy", "scipy", "statsmodels"}
     leaked = heavy.intersection(sys.modules)
-    assert not leaked, (
-        f"heavy libs imported by semantics contracts: {leaked}"
-    )
+    assert not leaked, f"heavy libs imported by semantics contracts: {leaked}"
