@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **55 done** · **86 remaining**
+**Totals**: 141 tasks · **58 done** · **83 remaining**
 
 ---
 
@@ -335,15 +335,15 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 4 — Core Infrastructure
 
-- [ ] **#77** Core errors and logging _(effort: High)_
+- [x] **#77** Core errors and logging _(effort: High)_
   - Goal: Add minimal shared infrastructure
   - Files: `src/analytics_platform/core/errors.py; src/analytics_platform/core/logging.py; tests/unit/core/test_errors_logging.py`
   - Commit: `Add core errors and logging`
-- [ ] **#78** Runtime and artifact paths _(effort: Max)_
+- [x] **#78** Runtime and artifact paths _(effort: Max)_
   - Goal: Add runtime metadata and artifact path rules
   - Files: `src/analytics_platform/core/runtime.py; src/analytics_platform/core/artifact_paths.py; tests/unit/core/test_runtime_artifact_paths.py`
   - Commit: `Add runtime and artifact path helpers`
-- [ ] **#79** Execution limits policy _(effort: Max)_
+- [x] **#79** Execution limits policy _(effort: Max)_
   - Goal: Implement row, column, collect, Pandas-conversion, and artifact-size limits
   - Files: `src/analytics_platform/core/execution_limits.py; tests/unit/core/test_execution_limits.py`
   - Commit: `Add execution limits policy`
