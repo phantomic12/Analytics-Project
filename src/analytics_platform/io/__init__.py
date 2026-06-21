@@ -81,10 +81,7 @@ class FormatDetectionReport:
         return Issue(
             code="FORMAT_UNKNOWN",
             severity=Severity.ERROR,
-            message=(
-                f"Could not detect a supported dataset format from "
-                f"path={self.source_path!r}"
-            ),
+            message=(f"Could not detect a supported dataset format from path={self.source_path!r}"),
         )
 
 
@@ -162,10 +159,7 @@ def detect_format(
         warnings.append(
             WarningRecord(
                 code="FORMAT_UNKNOWN",
-                message=(
-                    f"Could not detect a supported dataset format "
-                    f"from path={path!r}"
-                ),
+                message=(f"Could not detect a supported dataset format from path={path!r}"),
                 stage_id=stage_id,
                 run_id=run_id,
             )

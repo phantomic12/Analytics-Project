@@ -93,8 +93,7 @@ def _load_polars():
             _make_issue(
                 code="POLARS_NOT_INSTALLED",
                 message=(
-                    "Polars is required for the Polars backend adapter "
-                    f"but is not installed: {exc}"
+                    f"Polars is required for the Polars backend adapter but is not installed: {exc}"
                 ),
             )
         ) from exc
@@ -155,8 +154,7 @@ def handle_to_polars(
             _make_issue(
                 code="POLARS_BACKEND_MISMATCH",
                 message=(
-                    f"handle_to_polars expected a Polars ref, got "
-                    f"backend={ref.backend.value!r}"
+                    f"handle_to_polars expected a Polars ref, got backend={ref.backend.value!r}"
                 ),
             )
         )
@@ -263,9 +261,7 @@ class PolarsBackend:
                 )
             )
         self._registry[actual_handle] = frame
-        return polars_to_handle(
-            frame, backend_id=self._backend_id, handle=actual_handle
-        )
+        return polars_to_handle(frame, backend_id=self._backend_id, handle=actual_handle)
 
     # -----------------------------------------------------------------
     # Resolve
@@ -316,9 +312,7 @@ class PolarsBackend:
 
             uri = self._persist_to_parquet(frame, request.target_uri)
             try:
-                content = (
-                    _P(uri).read_bytes() if _P(uri).exists() else b""
-                )
+                content = _P(uri).read_bytes() if _P(uri).exists() else b""
             except OSError:
                 content = b""
 
@@ -418,9 +412,7 @@ class PolarsBackend:
 
         target = Path(target_uri) if target_uri else None
         if target is None:
-            with tempfile.NamedTemporaryFile(
-                suffix=".parquet", delete=False
-            ) as tmp:
+            with tempfile.NamedTemporaryFile(suffix=".parquet", delete=False) as tmp:
                 path = Path(tmp.name)
         else:
             path = target
@@ -433,17 +425,13 @@ class PolarsBackend:
             raise PolarsBackendError(
                 _make_issue(
                     code="POLARS_PERSIST_FAILED",
-                    message=(
-                        f"Cannot persist frame of type {type(frame).__name__}"
-                    ),
+                    message=(f"Cannot persist frame of type {type(frame).__name__}"),
                 )
             )
         _LOGGER.info("Persisted Polars frame to %s", path)
         return str(path)
 
-    def _materialization_status_for_result_ref(
-        self, ref: BackendObjectRef
-    ) -> Any:
+    def _materialization_status_for_result_ref(self, ref: BackendObjectRef) -> Any:
         from analytics_platform.contracts.common import ExecutionStatus
 
         return ExecutionStatus.SUCCEEDED
