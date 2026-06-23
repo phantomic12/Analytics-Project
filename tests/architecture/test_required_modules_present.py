@@ -55,12 +55,12 @@ EXPECTED_MODULES: tuple[tuple[str, int], ...] = (
     ("associations", 26),
     ("joins", 27),
     ("features", 28),  # covers Tasks 28-31
+    ("statistics", 32),
+    ("modeling", 33),  # covers Tasks 33-35
+    ("validation", 36),  # covers Tasks 36-38
     # --- Profile-only MVP checkpoint (Task 108) reached once the above are
     # present. The following modules are deferred to later tasks and are
     # NOT expected to exist yet:
-    #   ("statistics", 32),
-    #   ("modeling", 33),  # covers Tasks 33-35
-    #   ("validation", 36),  # covers Tasks 36-38
     #   ("reporting", 39),  # covers Tasks 39-40
     #   ("registry", 41),
     #   ("pipeline", 42),  # covers Tasks 42-45
@@ -101,9 +101,6 @@ class TestRequiredModulesPresent:
         import pkgutil
 
         deferred: set[str] = {
-            "statistics",
-            "modeling",
-            "validation",
             "reporting",
             "registry",
             "pipeline",
@@ -298,6 +295,54 @@ REQUIRED_PUBLIC_TYPES: dict[str, tuple[str, ...]] = {
         "LeakageCheckReport",
         "LeakageRisk",
         "LeakageRiskType",
+    ),
+    "statistics": (
+        "MultipleTestingCorrectionMethod",
+        "TestFamily",
+        "EffectEstimate",
+        "ConfidenceInterval",
+        "PValueAdjustmentResult",
+        "StatisticalTestResult",
+        "MultipleTestingCorrectionReport",
+    ),
+    "modeling": (
+        "ModelType",
+        "ModelFamily",
+        "TargetType",
+        "ModelPurpose",
+        "OLSModelSpec",
+        "ModelSpec",
+        "ModelSpecValidationReport",
+        "ModelFitRequest",
+        "ModelCoefficient",
+        "CoefficientTable",
+        "ModelResult",
+        "ModelMetricSet",
+        "ModelFitSummary",
+        "ModelAssumptionDiagnostics",
+        "ModelDataDiagnostics",
+        "ModelStabilityDiagnostics",
+        "ModelInterpretationLimit",
+        "AssumptionCheckResult",
+        "OverfittingCheckResult",
+        "ModelDiagnosticReport",
+    ),
+    "validation": (
+        "ClaimLevel",
+        "EvidenceGrade",
+        "CausalClaimPolicy",
+        "CausalWarning",
+        "ApprovedWording",
+        "DisallowedWording",
+        "ValidationStrategy",
+        "RobustnessCheckSpec",
+        "RobustnessCheckResult",
+        "SkippedRobustnessCheck",
+        "ValidationSpec",
+        "ModelValidationRequest",
+        "ModelValidationReport",
+        "ValidatedModelInterpretation",
+        "RejectedModelInterpretation",
     ),
 }
 
