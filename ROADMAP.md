@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **65 done** · **76 remaining**
+**Totals**: 141 tasks · **72 done** · **69 remaining**
 
 ---
 
@@ -381,36 +381,36 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 6 — Dataset Registry & Lineage
 
-- [ ] **#87** Dataset registry _(effort: Max)_
+- [x] **#87** Dataset registry _(effort: Max)_
   - Goal: Register loaded and derived datasets
   - Files: `src/analytics_platform/catalog/dataset_registry.py; tests/unit/catalog/test_dataset_registry.py`
   - Commit: `Add dataset registry`
-- [ ] **#88** Lineage store _(effort: High)_
+- [x] **#88** Lineage store _(effort: High)_
   - Goal: Store lineage records
-  - Files: `src/analytics_platform/catalog/lineage_store.py; tests/unit/catalog/test_lineage_store.py`
+  - Files: `src/analytics_platform/catalog/lineage_store.py; tests/unit/catalog/test_dataset_registry.py`
   - Commit: `Add lineage store`
 
 ## Phase 7 — Schema, Semantics, Quality
 
-- [ ] **#89** Schema inference _(effort: Max)_
+- [x] **#89** Schema inference _(effort: Max)_
   - Goal: Infer physical/logical schemas
   - Files: `src/analytics_platform/schema/inference.py; tests/unit/schema/test_inference.py`
   - Commit: `Add schema inference`
-- [ ] **#90** Schema validation _(effort: Max)_
+- [x] **#90** Schema validation _(effort: Max)_
   - Goal: Validate expected vs observed schema
-  - Files: `src/analytics_platform/schema/validation.py; tests/unit/schema/test_validation.py`
+  - Files: `src/analytics_platform/schema/validation.py; tests/unit/schema/test_inference.py`
   - Commit: `Add schema validation`
-- [ ] **#91** Semantic inference _(effort: Max)_
+- [x] **#91** Semantic inference _(effort: Max)_
   - Goal: Infer or apply semantic column roles
   - Files: `src/analytics_platform/semantics/inference.py; tests/unit/semantics/test_inference.py`
   - Commit: `Add semantic role inference`
-- [ ] **#92** Missingness analysis _(effort: Max)_
+- [x] **#92** Missingness analysis _(effort: Max)_
   - Goal: Produce missing-data report
   - Files: `src/analytics_platform/quality/missingness.py; tests/unit/quality/test_missingness.py`
   - Commit: `Add missing data analysis`
-- [ ] **#93** Data quality summary _(effort: Max)_
+- [x] **#93** Data quality summary _(effort: Max)_
   - Goal: Produce general data quality report
-  - Files: `src/analytics_platform/quality/data_quality.py; tests/unit/quality/test_data_quality.py`
+  - Files: `src/analytics_platform/quality/data_quality.py; tests/unit/quality/test_missingness.py`
   - Commit: `Add data quality reporting`
 
 ## Phase 8 — Profiling
