@@ -13,7 +13,7 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 - `[ ]` — not yet done
 - `[~]` — in progress in this fork (added by a PR)
 
-**Totals**: 141 tasks · **58 done** · **83 remaining**
+**Totals**: 141 tasks · **65 done** · **76 remaining**
 
 ---
 
@@ -350,31 +350,31 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 5 — Config, IO & Backend
 
-- [ ] **#80** Config loader _(effort: Max)_
+- [x] **#80** Config loader _(effort: Max)_
   - Goal: Load config into typed AnalysisPlan
   - Files: `src/analytics_platform/core/config.py; tests/unit/core/test_config.py`
   - Commit: `Add typed config loader`
-- [ ] **#81** IO format detection _(effort: High)_
+- [x] **#81** IO format detection _(effort: High)_
   - Goal: Detect supported local dataset formats
   - Files: `src/analytics_platform/io/format_detection.py; tests/unit/io/test_format_detection.py`
   - Commit: `Add dataset format detection`
-- [ ] **#82** Polars backend adapter _(effort: Max)_
+- [x] **#82** Polars backend adapter _(effort: Max)_
   - Goal: Make Polars the first concrete lazy backend
   - Files: `src/analytics_platform/backends/polars_backend.py; src/analytics_platform/backends/__init__.py; tests/unit/backends/test_polars_backend.py`
   - Commit: `Add Polars execution backend`
-- [ ] **#83** Backend registry and selection _(effort: Max)_
+- [x] **#83** Backend registry and selection _(effort: Max)_
   - Goal: Resolve backends without circular imports
   - Files: `src/analytics_platform/backends/registry.py; tests/unit/backends/test_backend_registry.py`
   - Commit: `Add backend registry`
-- [ ] **#84** Parquet artifact store _(effort: Max)_
+- [x] **#84** Parquet artifact store _(effort: Max)_
   - Goal: Persist intermediate datasets and selected outputs as Parquet artifacts
   - Files: `src/analytics_platform/artifacts/parquet_store.py; src/analytics_platform/artifacts/__init__.py; tests/unit/artifacts/test_parquet_store.py`
   - Commit: `Add Parquet artifact store`
-- [ ] **#85** Runtime dataset store _(effort: Max)_
+- [x] **#85** Runtime dataset store _(effort: Max)_
   - Goal: Store private lazy/dataframe objects behind handles
   - Files: `src/analytics_platform/catalog/runtime_store.py; tests/unit/catalog/test_runtime_store.py`
   - Commit: `Add runtime dataset store`
-- [ ] **#86** Local dataset readers _(effort: Max)_
+- [x] **#86** Local dataset readers _(effort: Max)_
   - Goal: Load CSV/Parquet into backend refs and ingestion reports
   - Files: `src/analytics_platform/io/readers.py; tests/unit/io/test_readers.py`
   - Commit: `Add local dataset readers`

@@ -51,7 +51,7 @@ __all__ = [
     "ArtifactStoragePolicy",
     "PersistedArtifact",
     "DatasetArtifactRef",
-]
+]  # noqa: E501 (ArtifactRef re-exported from common.py)
 
 
 # ---------------------------------------------------------------------------
