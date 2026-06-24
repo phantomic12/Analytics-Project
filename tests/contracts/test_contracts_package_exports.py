@@ -1,0 +1,556 @@
+"""Tests for the contracts package public surface (Build Queue v2.1 Task 46).
+
+Verifies that ``analytics_platform.contracts`` exposes the documented stable
+names for every contract family whose Build Queue v2.1 contract tasks have
+landed, and that importing the subpackage does not pull in heavy compute
+libraries (same discipline as the per-module guards).
+
+These tests intentionally avoid importing any heavy compute library so that
+they exercise the dependency-light contract surface only.
+"""
+
+from __future__ import annotations
+
+import importlib
+
+import pytest
+
+import analytics_platform.contracts as contracts_pkg
+
+# ---------------------------------------------------------------------------
+# Public-name stability
+# ---------------------------------------------------------------------------
+EXPECTED_PUBLIC_NAMES: tuple[str, ...] = (
+    # common (Task 11)
+    "ArtifactId",
+    "ArtifactRef",
+    "DatasetId",
+    "ExecutionStatus",
+    "Issue",
+    "LineageId",
+    "MetricValue",
+    "ModelId",
+    "ReportId",
+    "RunId",
+    "Severity",
+    "StageId",
+    "StageResult",
+    "WarningRecord",
+    # execution (Tasks 12-14)
+    "BackendId",
+    "BackendObjectRef",
+    "CollectMode",
+    "CollectPolicy",
+    "ExecutionBackend",
+    "ExecutionLimitPolicy",
+    "LazyFrameRef",
+    "MaterializationPolicy",
+    "MaterializationRequest",
+    "MaterializationResult",
+    "MemoryBudgetPolicy",
+    "PandasConversionMode",
+    "PandasConversionPolicy",
+    # artifacts (Task 15)
+    "ArtifactHash",
+    "ArtifactStoragePolicy",
+    "DatasetArtifactRef",
+    "PersistedArtifact",
+    # cache (Task 16)
+    "CacheFingerprint",
+    "CacheKey",
+    "CacheStatus",
+    "InvalidationReason",
+    # visuals (Task 17)
+    "ChartArtifactRef",
+    "TableArtifactRef",
+    "VisualArtifactSpec",
+    # datasets (Tasks 18-20)
+    "DatasetFingerprint",
+    "DatasetFormat",
+    "DatasetHandle",
+    "DatasetLoadRequest",
+    "DatasetLoadResult",
+    "DatasetMaterializationStatus",
+    "DatasetRef",
+    "DatasetRole",
+    "IngestionReport",
+    "RegisteredDatasetResult",
+    "SourceFileMetadata",
+    "StorageBackend",
+    # lineage (Task 21)
+    "DerivedDatasetRef",
+    "LineageGraphSnapshot",
+    "LineageOperationType",
+    "LineageRecord",
+    "SourceDatasetRef",
+    "TransformationId",
+    "TransformationRef",
+    # schemas (Task 22)
+    "ColumnName",
+    "ColumnSchema",
+    "ExpectedColumnSchema",
+    "ExpectedSchema",
+    "LogicalDataType",
+    "ObservedSchema",
+    "PhysicalDataType",
+    "SchemaInferenceRequest",
+    "SchemaIssue",
+    "SchemaValidationReport",
+    "SchemaValidationRequest",
+    # semantics (Task 23)
+    "ColumnRole",
+    "ColumnRoleAssignment",
+    "RiskyColumnUse",
+    "SemanticColumnProfile",
+    "SemanticColumnType",
+    "SemanticTypeConfidence",
+    "SemanticTypeInferenceReport",
+    "SemanticTypeInferenceRequest",
+    # quality (Task 24)
+    "ColumnMissingness",
+    "DataQualityIssue",
+    "DataQualityIssueKind",
+    "DataQualityReport",
+    "JoinIntroducedMissingness",
+    "MissingDataReport",
+    "MissingnessPatternSummary",
+    "ModelExclusionReason",
+    "ModelExclusionSummary",
+    "RowMissingnessSummary",
+    # profiling (Task 25)
+    "CardinalityProfile",
+    "CategoricalProfile",
+    "ColumnProfile",
+    "ConstantColumnWarning",
+    "DatasetProfile",
+    "DatetimeProfile",
+    "DistributionSummary",
+    "DuplicateProfile",
+    "FrequencySummary",
+    "HighCardinalityWarning",
+    "MissingnessProfile",
+    "NumericProfile",
+    "OutlierDetectionMethod",
+    "OutlierProfile",
+    "ProfileApproximationMethod",
+    "ProfileComputationMode",
+    "ProfilingRequest",
+    "ProfilingSpec",
+    "QuantileSummary",
+    # associations (Task 26)
+    "AssociationCheckReport",
+    "AssociationCheckRequest",
+    "AssociationCheckSpec",
+    "AssociationWarning",
+    "CorrelationMethod",
+    "MulticollinearityRiskSummary",
+    "PairwiseAssociationSummary",
+    # joins (Task 27)
+    "ColumnConflictPolicy",
+    "DuplicateKeyPolicy",
+    "JoinApprovalStatus",
+    "JoinCardinality",
+    "JoinExecutionReport",
+    "JoinExecutionRequest",
+    "JoinKeySpec",
+    "JoinRiskLevel",
+    "JoinSpec",
+    "JoinType",
+    "JoinValidationReport",
+    "JoinValidationRequest",
+    "JoinedDatasetResult",
+    "NullKeyPolicy",
+    # features (Tasks 28-31)
+    "ColumnsExcludedReport",
+    "EncodingStrategy",
+    "FeatureBuildRequest",
+    "FeatureEligibilityReport",
+    "FeatureExclusionReason",
+    "FeatureMatrixRef",
+    "FeatureMatrixResult",
+    "FeatureSpec",
+    "FeatureTransformationPlan",
+    "FeatureTransformationReport",
+    "LeakageCheckReport",
+    "LeakageCheckRequest",
+    "LeakageRisk",
+    "LeakageRiskType",
+    "MissingValueStrategy",
+    "PreprocessingFitScope",
+    "RowsExcludedReport",
+    "ScalingStrategy",
+    "SplitSpec",
+    "SplitStrategy",
+    "TargetSpec",
+    "TargetTask",
+    # statistics (Task 32)
+    "ConfidenceInterval",
+    "EffectEstimate",
+    "MultipleTestingCorrectionMethod",
+    "MultipleTestingCorrectionReport",
+    "PValueAdjustmentResult",
+    "StatisticalTestResult",
+    "TestFamily",
+    # modeling (Tasks 33-35)
+    "AssumptionCheckResult",
+    "CoefficientTable",
+    "ModelAssumptionDiagnostics",
+    "ModelCoefficient",
+    "ModelDataDiagnostics",
+    "ModelDiagnosticReport",
+    "ModelFamily",
+    "ModelFitRequest",
+    "ModelFitSummary",
+    "ModelInterpretationLimit",
+    "ModelMetricSet",
+    "ModelPurpose",
+    "ModelResult",
+    "ModelSpec",
+    "ModelSpecValidationReport",
+    "ModelStabilityDiagnostics",
+    "ModelType",
+    "OLSModelSpec",
+    "OverfittingCheckResult",
+    "TargetType",
+    # validation (Tasks 36-38)
+    "ApprovedWording",
+    "CausalClaimPolicy",
+    "CausalWarning",
+    "ClaimLevel",
+    "DisallowedWording",
+    "EvidenceGrade",
+    "ModelValidationReport",
+    "ModelValidationRequest",
+    "RejectedModelInterpretation",
+    "RobustnessCheckResult",
+    "RobustnessCheckSpec",
+    "SkippedRobustnessCheck",
+    "ValidatedModelInterpretation",
+    "ValidationSpec",
+    "ValidationStrategy",
+    # reporting (Tasks 39-40)
+    "ReportArtifactSet",
+    "ReportBuildRequest",
+    "ReportClaimSummary",
+    "ReportFormat",
+    "ReportInputBundle",
+    "ReportRenderRequest",
+    "ReportSection",
+    "ReportSectionType",
+    "ReportWarningSummary",
+    # registry (Task 41)
+    "ArtifactRegistryEntry",
+    "DatasetRegistryEntry",
+    "ModelRegistryEntry",
+    "RegistryWriteRequest",
+    "RegistryWriteResult",
+    "ResultRegistryEntry",
+    "RunHistoryQuery",
+    "RunRegistryRecord",
+    "RunStatus",
+    # pipeline (Tasks 42-45)
+    "AnalysisPlan",
+    "AnalysisRunResult",
+    "PipelineExecutionMode",
+    "PipelineFailurePolicy",
+    "PipelineStageName",
+    "PipelineWarningSummary",
+    "RunManifest",
+    "RunManifestRequest",
+)
+
+
+class TestPublicSurface:
+    def test_all_documented_names_exported(self) -> None:
+        for name in EXPECTED_PUBLIC_NAMES:
+            assert hasattr(contracts_pkg, name), (
+                f"analytics_platform.contracts is missing documented public name: {name!r}"
+            )
+
+    def test_dunder_all_lists_all_documented_names(self) -> None:
+        # ``__all__`` must include every documented name. It may also list
+        # additional names (e.g. aliases) without breaking this check.
+        missing = set(EXPECTED_PUBLIC_NAMES) - set(contracts_pkg.__all__)
+        assert not missing, f"__all__ is missing documented names: {sorted(missing)}"
+
+    def test_every_all_entry_resolves(self) -> None:
+        for name in contracts_pkg.__all__:
+            obj = getattr(contracts_pkg, name, None)
+            assert obj is not None, f"{name!r} listed in __all__ but not exposed"
+
+
+# ---------------------------------------------------------------------------
+# Cross-module re-export parity
+# ---------------------------------------------------------------------------
+class TestReExportParity:
+    """Names listed in ``contracts.__all__`` must be the *same objects* as
+    the ones defined in their owning module. This guards against accidental
+    shadowing or duplicate definitions in ``__init__.py``."""
+
+    @pytest.mark.parametrize("name", list(EXPECTED_PUBLIC_NAMES))
+    def test_name_matches_owning_module_object(self, name: str) -> None:
+        # Map each public name to its owning contract module. New families
+        # added to ``EXPECTED_PUBLIC_NAMES`` must also be added here.
+        module_for_name = {
+            # common
+            "ArtifactId": "analytics_platform.contracts.common",
+            "ArtifactRef": "analytics_platform.contracts.common",
+            "DatasetId": "analytics_platform.contracts.common",
+            "ExecutionStatus": "analytics_platform.contracts.common",
+            "Issue": "analytics_platform.contracts.common",
+            "LineageId": "analytics_platform.contracts.common",
+            "MetricValue": "analytics_platform.contracts.common",
+            "ModelId": "analytics_platform.contracts.common",
+            "ReportId": "analytics_platform.contracts.common",
+            "RunId": "analytics_platform.contracts.common",
+            "Severity": "analytics_platform.contracts.common",
+            "StageId": "analytics_platform.contracts.common",
+            "StageResult": "analytics_platform.contracts.common",
+            "WarningRecord": "analytics_platform.contracts.common",
+            # execution
+            "BackendId": "analytics_platform.contracts.execution",
+            "BackendObjectRef": "analytics_platform.contracts.execution",
+            "CollectMode": "analytics_platform.contracts.execution",
+            "CollectPolicy": "analytics_platform.contracts.execution",
+            "ExecutionBackend": "analytics_platform.contracts.execution",
+            "ExecutionLimitPolicy": "analytics_platform.contracts.execution",
+            "LazyFrameRef": "analytics_platform.contracts.execution",
+            "MaterializationPolicy": "analytics_platform.contracts.execution",
+            "MaterializationRequest": "analytics_platform.contracts.execution",
+            "MaterializationResult": "analytics_platform.contracts.execution",
+            "MemoryBudgetPolicy": "analytics_platform.contracts.execution",
+            "PandasConversionMode": "analytics_platform.contracts.execution",
+            "PandasConversionPolicy": "analytics_platform.contracts.execution",
+            # artifacts
+            "ArtifactHash": "analytics_platform.contracts.artifacts",
+            "ArtifactStoragePolicy": "analytics_platform.contracts.artifacts",
+            "DatasetArtifactRef": "analytics_platform.contracts.artifacts",
+            "PersistedArtifact": "analytics_platform.contracts.artifacts",
+            # cache
+            "CacheFingerprint": "analytics_platform.contracts.cache",
+            "CacheKey": "analytics_platform.contracts.cache",
+            "CacheStatus": "analytics_platform.contracts.cache",
+            "InvalidationReason": "analytics_platform.contracts.cache",
+            # visuals
+            "ChartArtifactRef": "analytics_platform.contracts.visuals",
+            "TableArtifactRef": "analytics_platform.contracts.visuals",
+            "VisualArtifactSpec": "analytics_platform.contracts.visuals",
+            # datasets
+            "DatasetFingerprint": "analytics_platform.contracts.datasets",
+            "DatasetFormat": "analytics_platform.contracts.datasets",
+            "DatasetHandle": "analytics_platform.contracts.datasets",
+            "DatasetLoadRequest": "analytics_platform.contracts.datasets",
+            "DatasetLoadResult": "analytics_platform.contracts.datasets",
+            "DatasetMaterializationStatus": "analytics_platform.contracts.datasets",
+            "DatasetRef": "analytics_platform.contracts.datasets",
+            "DatasetRole": "analytics_platform.contracts.datasets",
+            "IngestionReport": "analytics_platform.contracts.datasets",
+            "RegisteredDatasetResult": "analytics_platform.contracts.datasets",
+            "SourceFileMetadata": "analytics_platform.contracts.datasets",
+            "StorageBackend": "analytics_platform.contracts.datasets",
+            # lineage (Task 21)
+            "DerivedDatasetRef": "analytics_platform.contracts.lineage",
+            "LineageGraphSnapshot": "analytics_platform.contracts.lineage",
+            "LineageOperationType": "analytics_platform.contracts.lineage",
+            "LineageRecord": "analytics_platform.contracts.lineage",
+            "SourceDatasetRef": "analytics_platform.contracts.lineage",
+            "TransformationId": "analytics_platform.contracts.lineage",
+            "TransformationRef": "analytics_platform.contracts.lineage",
+            # schemas (Task 22)
+            "ColumnName": "analytics_platform.contracts.schemas",
+            "ColumnSchema": "analytics_platform.contracts.schemas",
+            "ExpectedColumnSchema": "analytics_platform.contracts.schemas",
+            "ExpectedSchema": "analytics_platform.contracts.schemas",
+            "LogicalDataType": "analytics_platform.contracts.schemas",
+            "ObservedSchema": "analytics_platform.contracts.schemas",
+            "PhysicalDataType": "analytics_platform.contracts.schemas",
+            "SchemaInferenceRequest": "analytics_platform.contracts.schemas",
+            "SchemaIssue": "analytics_platform.contracts.schemas",
+            "SchemaValidationReport": "analytics_platform.contracts.schemas",
+            "SchemaValidationRequest": "analytics_platform.contracts.schemas",
+            # semantics (Task 23)
+            "ColumnRole": "analytics_platform.contracts.semantics",
+            "ColumnRoleAssignment": "analytics_platform.contracts.semantics",
+            "RiskyColumnUse": "analytics_platform.contracts.semantics",
+            "SemanticColumnProfile": "analytics_platform.contracts.semantics",
+            "SemanticColumnType": "analytics_platform.contracts.semantics",
+            "SemanticTypeConfidence": "analytics_platform.contracts.semantics",
+            "SemanticTypeInferenceReport": "analytics_platform.contracts.semantics",
+            "SemanticTypeInferenceRequest": "analytics_platform.contracts.semantics",
+            # quality (Task 24)
+            "ColumnMissingness": "analytics_platform.contracts.quality",
+            "DataQualityIssue": "analytics_platform.contracts.quality",
+            "DataQualityIssueKind": "analytics_platform.contracts.quality",
+            "DataQualityReport": "analytics_platform.contracts.quality",
+            "JoinIntroducedMissingness": "analytics_platform.contracts.quality",
+            "MissingDataReport": "analytics_platform.contracts.quality",
+            "MissingnessPatternSummary": "analytics_platform.contracts.quality",
+            "ModelExclusionReason": "analytics_platform.contracts.quality",
+            "ModelExclusionSummary": "analytics_platform.contracts.quality",
+            "RowMissingnessSummary": "analytics_platform.contracts.quality",
+            # profiling (Task 25)
+            "CardinalityProfile": "analytics_platform.contracts.profiling",
+            "CategoricalProfile": "analytics_platform.contracts.profiling",
+            "ColumnProfile": "analytics_platform.contracts.profiling",
+            "ConstantColumnWarning": "analytics_platform.contracts.profiling",
+            "DatasetProfile": "analytics_platform.contracts.profiling",
+            "DatetimeProfile": "analytics_platform.contracts.profiling",
+            "DistributionSummary": "analytics_platform.contracts.profiling",
+            "DuplicateProfile": "analytics_platform.contracts.profiling",
+            "FrequencySummary": "analytics_platform.contracts.profiling",
+            "HighCardinalityWarning": "analytics_platform.contracts.profiling",
+            "MissingnessProfile": "analytics_platform.contracts.profiling",
+            "NumericProfile": "analytics_platform.contracts.profiling",
+            "OutlierDetectionMethod": "analytics_platform.contracts.profiling",
+            "OutlierProfile": "analytics_platform.contracts.profiling",
+            "ProfileApproximationMethod": "analytics_platform.contracts.profiling",
+            "ProfileComputationMode": "analytics_platform.contracts.profiling",
+            "ProfilingRequest": "analytics_platform.contracts.profiling",
+            "ProfilingSpec": "analytics_platform.contracts.profiling",
+            "QuantileSummary": "analytics_platform.contracts.profiling",
+            # associations (Task 26)
+            "AssociationCheckReport": "analytics_platform.contracts.associations",
+            "AssociationCheckRequest": "analytics_platform.contracts.associations",
+            "AssociationCheckSpec": "analytics_platform.contracts.associations",
+            "AssociationWarning": "analytics_platform.contracts.associations",
+            "CorrelationMethod": "analytics_platform.contracts.associations",
+            "MulticollinearityRiskSummary": "analytics_platform.contracts.associations",
+            "PairwiseAssociationSummary": "analytics_platform.contracts.associations",
+            # joins (Task 27)
+            "ColumnConflictPolicy": "analytics_platform.contracts.joins",
+            "DuplicateKeyPolicy": "analytics_platform.contracts.joins",
+            "JoinApprovalStatus": "analytics_platform.contracts.joins",
+            "JoinCardinality": "analytics_platform.contracts.joins",
+            "JoinExecutionReport": "analytics_platform.contracts.joins",
+            "JoinExecutionRequest": "analytics_platform.contracts.joins",
+            "JoinKeySpec": "analytics_platform.contracts.joins",
+            "JoinRiskLevel": "analytics_platform.contracts.joins",
+            "JoinSpec": "analytics_platform.contracts.joins",
+            "JoinType": "analytics_platform.contracts.joins",
+            "JoinValidationReport": "analytics_platform.contracts.joins",
+            "JoinValidationRequest": "analytics_platform.contracts.joins",
+            "JoinedDatasetResult": "analytics_platform.contracts.joins",
+            "NullKeyPolicy": "analytics_platform.contracts.joins",
+            # features (Tasks 28-31)
+            "ColumnsExcludedReport": "analytics_platform.contracts.features",
+            "EncodingStrategy": "analytics_platform.contracts.features",
+            "FeatureBuildRequest": "analytics_platform.contracts.features",
+            "FeatureEligibilityReport": "analytics_platform.contracts.features",
+            "FeatureExclusionReason": "analytics_platform.contracts.features",
+            "FeatureMatrixRef": "analytics_platform.contracts.features",
+            "FeatureMatrixResult": "analytics_platform.contracts.features",
+            "FeatureSpec": "analytics_platform.contracts.features",
+            "FeatureTransformationPlan": "analytics_platform.contracts.features",
+            "FeatureTransformationReport": "analytics_platform.contracts.features",
+            "LeakageCheckReport": "analytics_platform.contracts.features",
+            "LeakageCheckRequest": "analytics_platform.contracts.features",
+            "LeakageRisk": "analytics_platform.contracts.features",
+            "LeakageRiskType": "analytics_platform.contracts.features",
+            "MissingValueStrategy": "analytics_platform.contracts.features",
+            "PreprocessingFitScope": "analytics_platform.contracts.features",
+            "RowsExcludedReport": "analytics_platform.contracts.features",
+            "ScalingStrategy": "analytics_platform.contracts.features",
+            "SplitSpec": "analytics_platform.contracts.features",
+            "SplitStrategy": "analytics_platform.contracts.features",
+            "TargetSpec": "analytics_platform.contracts.features",
+            "TargetTask": "analytics_platform.contracts.features",
+            # statistics (Task 32)
+            "ConfidenceInterval": "analytics_platform.contracts.statistics",
+            "EffectEstimate": "analytics_platform.contracts.statistics",
+            "MultipleTestingCorrectionMethod": "analytics_platform.contracts.statistics",
+            "MultipleTestingCorrectionReport": "analytics_platform.contracts.statistics",
+            "PValueAdjustmentResult": "analytics_platform.contracts.statistics",
+            "StatisticalTestResult": "analytics_platform.contracts.statistics",
+            "TestFamily": "analytics_platform.contracts.statistics",
+            # modeling (Tasks 33-35)
+            "AssumptionCheckResult": "analytics_platform.contracts.modeling",
+            "CoefficientTable": "analytics_platform.contracts.modeling",
+            "ModelAssumptionDiagnostics": "analytics_platform.contracts.modeling",
+            "ModelCoefficient": "analytics_platform.contracts.modeling",
+            "ModelDataDiagnostics": "analytics_platform.contracts.modeling",
+            "ModelDiagnosticReport": "analytics_platform.contracts.modeling",
+            "ModelFamily": "analytics_platform.contracts.modeling",
+            "ModelFitRequest": "analytics_platform.contracts.modeling",
+            "ModelFitSummary": "analytics_platform.contracts.modeling",
+            "ModelInterpretationLimit": "analytics_platform.contracts.modeling",
+            "ModelMetricSet": "analytics_platform.contracts.modeling",
+            "ModelPurpose": "analytics_platform.contracts.modeling",
+            "ModelResult": "analytics_platform.contracts.modeling",
+            "ModelSpec": "analytics_platform.contracts.modeling",
+            "ModelSpecValidationReport": "analytics_platform.contracts.modeling",
+            "ModelStabilityDiagnostics": "analytics_platform.contracts.modeling",
+            "ModelType": "analytics_platform.contracts.modeling",
+            "OLSModelSpec": "analytics_platform.contracts.modeling",
+            "OverfittingCheckResult": "analytics_platform.contracts.modeling",
+            "TargetType": "analytics_platform.contracts.modeling",
+            # validation (Tasks 36-38)
+            "ApprovedWording": "analytics_platform.contracts.validation",
+            "CausalClaimPolicy": "analytics_platform.contracts.validation",
+            "CausalWarning": "analytics_platform.contracts.validation",
+            "ClaimLevel": "analytics_platform.contracts.validation",
+            "DisallowedWording": "analytics_platform.contracts.validation",
+            "EvidenceGrade": "analytics_platform.contracts.validation",
+            "ModelValidationReport": "analytics_platform.contracts.validation",
+            "ModelValidationRequest": "analytics_platform.contracts.validation",
+            "RejectedModelInterpretation": "analytics_platform.contracts.validation",
+            "RobustnessCheckResult": "analytics_platform.contracts.validation",
+            "RobustnessCheckSpec": "analytics_platform.contracts.validation",
+            "SkippedRobustnessCheck": "analytics_platform.contracts.validation",
+            "ValidatedModelInterpretation": "analytics_platform.contracts.validation",
+            "ValidationSpec": "analytics_platform.contracts.validation",
+            "ValidationStrategy": "analytics_platform.contracts.validation",
+            # reporting (Tasks 39-40)
+            "ReportArtifactSet": "analytics_platform.contracts.reporting",
+            "ReportBuildRequest": "analytics_platform.contracts.reporting",
+            "ReportClaimSummary": "analytics_platform.contracts.reporting",
+            "ReportFormat": "analytics_platform.contracts.reporting",
+            "ReportInputBundle": "analytics_platform.contracts.reporting",
+            "ReportRenderRequest": "analytics_platform.contracts.reporting",
+            "ReportSection": "analytics_platform.contracts.reporting",
+            "ReportSectionType": "analytics_platform.contracts.reporting",
+            "ReportWarningSummary": "analytics_platform.contracts.reporting",
+            # registry (Task 41)
+            "ArtifactRegistryEntry": "analytics_platform.contracts.registry",
+            "DatasetRegistryEntry": "analytics_platform.contracts.registry",
+            "ModelRegistryEntry": "analytics_platform.contracts.registry",
+            "RegistryWriteRequest": "analytics_platform.contracts.registry",
+            "RegistryWriteResult": "analytics_platform.contracts.registry",
+            "ResultRegistryEntry": "analytics_platform.contracts.registry",
+            "RunHistoryQuery": "analytics_platform.contracts.registry",
+            "RunRegistryRecord": "analytics_platform.contracts.registry",
+            "RunStatus": "analytics_platform.contracts.registry",
+            # pipeline (Tasks 42-45)
+            "AnalysisPlan": "analytics_platform.contracts.pipeline",
+            "AnalysisRunResult": "analytics_platform.contracts.pipeline",
+            "PipelineExecutionMode": "analytics_platform.contracts.pipeline",
+            "PipelineFailurePolicy": "analytics_platform.contracts.pipeline",
+            "PipelineStageName": "analytics_platform.contracts.pipeline",
+            "PipelineWarningSummary": "analytics_platform.contracts.pipeline",
+            "RunManifest": "analytics_platform.contracts.pipeline",
+            "RunManifestRequest": "analytics_platform.contracts.pipeline",
+        }
+        module_name = module_for_name[name]
+        owning_module = importlib.import_module(module_name)
+        assert getattr(contracts_pkg, name) is getattr(owning_module, name), (
+            f"{name!r} on contracts package is not the same object as the one "
+            f"defined in {module_name}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Import-weight guard
+# ---------------------------------------------------------------------------
+def test_contracts_package_does_not_import_heavy_libs() -> None:
+    """Importing the contracts subpackage must not pull heavy libs.
+
+    Mirrors the per-module guards. The contracts subpackage is the public
+    surface used by downstream modules, so the discipline that applies to
+    individual modules must also hold at the package level.
+    """
+    import sys
+
+    import analytics_platform.contracts as contracts_mod  # noqa: F401
+
+    heavy = {"polars", "pandas", "duckdb", "numpy", "scipy", "statsmodels"}
+    leaked = heavy.intersection(sys.modules)
+    assert not leaked, f"heavy libs imported by contracts package: {leaked}"
