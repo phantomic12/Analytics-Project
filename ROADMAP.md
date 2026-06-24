@@ -565,66 +565,66 @@ It mirrors the 141-task table forwarded by Sean Dery on 2026-06-20 and regroups 
 
 ## Phase 14 — OLS Modeling
 
-- [ ] **#127** Model spec validation _(effort: Max)_
+- [x] **#127** Model spec validation _(effort: Max)_
   - Goal: Validate OLS specs before data prep/fitting
   - Files: `src/analytics_platform/modeling/spec_validation.py; tests/unit/modeling/test_spec_validation.py`
   - Commit: `Add OLS model spec validation`
-- [ ] **#128** Statsmodels data adapter _(effort: Max)_
+- [x] **#128** Statsmodels data adapter _(effort: Max)_
   - Goal: Convert bounded feature refs into Statsmodels-ready private data
   - Files: `src/analytics_platform/modeling/data_adapter.py; tests/unit/modeling/test_data_adapter.py`
   - Commit: `Add modeling data adapter`
-- [ ] **#129** OLS fit core _(effort: Max)_
+- [x] **#129** OLS fit core _(effort: Max)_
   - Goal: Fit explicit multivariable OLS
   - Files: `src/analytics_platform/modeling/ols.py; tests/unit/modeling/test_ols_fit.py`
   - Commit: `Add OLS fit core`
-- [ ] **#130** OLS result extraction _(effort: Max)_
+- [x] **#130** OLS result extraction _(effort: Max)_
   - Goal: Extract coefficients, intervals, p-values, and metrics into typed result
   - Files: `src/analytics_platform/modeling/result_extraction.py; tests/unit/modeling/test_result_extraction.py`
   - Commit: `Add OLS result extraction`
-- [ ] **#131** Model fit metrics _(effort: Max)_
+- [x] **#131** Model fit metrics _(effort: Max)_
   - Goal: Compute fit and train/test metrics for OLS
   - Files: `src/analytics_platform/modeling/metrics.py; tests/unit/modeling/test_metrics.py`
   - Commit: `Add OLS fit metrics`
-- [ ] **#132** Multicollinearity diagnostics _(effort: Max)_
+- [x] **#132** Multicollinearity diagnostics _(effort: Max)_
   - Goal: Add predictor association and multicollinearity warnings
   - Files: `src/analytics_platform/modeling/multicollinearity.py; tests/unit/modeling/test_multicollinearity.py`
   - Commit: `Add multicollinearity diagnostics`
-- [ ] **#133** Residual and assumption diagnostics _(effort: Max)_
+- [x] **#133** Residual and assumption diagnostics _(effort: Max)_
   - Goal: Add residual, outlier, and assumption warning summaries
   - Files: `src/analytics_platform/modeling/assumption_diagnostics.py; tests/unit/modeling/test_assumption_diagnostics.py`
   - Commit: `Add OLS assumption diagnostics`
-- [ ] **#134** Model diagnostic assembler _(effort: Max)_
+- [x] **#134** Model diagnostic assembler _(effort: Max)_
   - Goal: Assemble full ModelDiagnosticReport
   - Files: `src/analytics_platform/modeling/diagnostics.py; tests/unit/modeling/test_diagnostics.py`
   - Commit: `Add OLS diagnostic report assembler`
-- [ ] **#135** Multiple-testing implementation _(effort: Max)_
+- [x] **#135** Multiple-testing implementation _(effort: Max)_
   - Goal: Implement p-value correction methods
   - Files: `src/analytics_platform/validation/multiple_testing.py; tests/unit/validation/test_multiple_testing.py`
   - Commit: `Add multiple testing correction`
-- [ ] **#136** Claim rules _(effort: Max)_
+- [x] **#136** Claim rules _(effort: Max)_
   - Goal: Enforce claim levels and causal blocking
   - Files: `src/analytics_platform/validation/claim_rules.py; tests/unit/validation/test_claim_rules.py`
   - Commit: `Add claim rule validation`
-- [ ] **#137** Robustness status _(effort: Max)_
+- [x] **#137** Robustness status _(effort: Max)_
   - Goal: Track minimal robustness and skipped checks
   - Files: `src/analytics_platform/validation/robustness.py; tests/unit/validation/test_robustness.py`
   - Commit: `Add robustness status handling`
-- [ ] **#138** Model validation gates _(effort: Max)_
+- [x] **#138** Model validation gates _(effort: Max)_
   - Goal: Validate model interpretation and claim level
   - Files: `src/analytics_platform/validation/model_validation.py; tests/unit/validation/test_model_validation.py`
   - Commit: `Add model validation gates`
 
 ## Phase 15 — Full Reporting
 
-- [ ] **#139** Model report sections _(effort: Max)_
+- [x] **#139** Model report sections _(effort: Max)_
   - Goal: Build model, diagnostic, validation, and limitation sections
   - Files: `src/analytics_platform/reporting/model_sections.py; tests/unit/reporting/test_model_sections.py`
   - Commit: `Add model report sections`
-- [ ] **#140** Full report bundle assembler _(effort: Max)_
+- [x] **#140** Full report bundle assembler _(effort: Max)_
   - Goal: Assemble profile, join, model, visual, and skipped sections
   - Files: `src/analytics_platform/reporting/report_builder.py; tests/unit/reporting/test_report_builder.py`
   - Commit: `Add full report bundle assembler`
-- [ ] **#141** Full Markdown renderer _(effort: )_
+- [x] **#141** Full Markdown renderer _(effort: )_
   - Goal: Render full Markdown report with table/chart refs
 
 ---

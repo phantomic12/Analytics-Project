@@ -128,6 +128,9 @@ docstring-code-format = true
 minversion = "7.4"
 testpaths = ["tests"]
 addopts = "-ra"
+markers = [
+    "integration: end-to-end profile-only MVP integration tests",
+]
 
 # ---------------------------------------------------------------------------
 # mypy

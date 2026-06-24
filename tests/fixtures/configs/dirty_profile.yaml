@@ -1,0 +1,4 @@
+dataset:
+  uri: ${FIXTURE_DIR}/datasets/small_dirty.csv
+  format: csv
+  role: source
